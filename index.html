@@ -20,8 +20,6 @@
   --border-accent: rgba(0,229,255,0.2);
 }
 body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; }
-
-/* ===================== SHARED ===================== */
 .hidden { display: none !important; }
 .tag { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
 .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; text-decoration: none; }
@@ -31,85 +29,38 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .btn-danger { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,59,48,0.1); color: #ff3b30; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,59,48,0.2); cursor: pointer; transition: all 0.25s; }
 .btn-danger:hover { background: rgba(255,59,48,0.2); }
 
-/* ===================== LOGIN ===================== */
-#view-login {
-  min-height: 100vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px; position: relative; overflow: hidden;
-}
-.login-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 24px; padding: 48px 40px;
-  width: 100%; max-width: 400px; position: relative; z-index: 2;
-  text-align: center;
-}
+#view-login { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
+.login-card { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 400px; position: relative; z-index: 2; text-align: center; }
 .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 4px; }
 .login-logo span { color: var(--accent); }
 .login-subtitle { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: block; }
 .login-icon { font-size: 40px; margin-bottom: 16px; }
 .login-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
 .login-desc { font-size: 13px; font-weight: 300; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
-.login-input {
-  width: 100%; background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px; font-family: 'Outfit', sans-serif;
-  font-size: 16px; color: var(--white); outline: none; text-align: center;
-  letter-spacing: 0.1em; transition: border-color 0.2s; margin-bottom: 16px;
-}
+.login-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--white); outline: none; text-align: center; letter-spacing: 0.1em; transition: border-color 0.2s; margin-bottom: 16px; }
 .login-input:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
 .login-input::placeholder { color: rgba(107,128,150,0.4); letter-spacing: 0.05em; }
-.login-btn {
-  width: 100%; background: var(--accent); color: var(--bg);
-  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase; padding: 16px;
-  border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s;
-}
+.login-btn { width: 100%; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; }
 .login-btn:hover { background: #00cef5; box-shadow: 0 0 24px rgba(0,229,255,0.4); }
 .login-error { font-size: 12px; color: #ff3b30; margin-top: 12px; display: none; }
 .login-error.show { display: block; }
 .login-attempts { font-size: 11px; color: var(--muted); margin-top: 12px; }
 
-/* ===================== VIEWS ===================== */
 #view-landing, #view-admin, #view-client, #view-add-client { min-height: 100vh; }
-
-/* ===================== LANDING ===================== */
-#view-landing {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 40px; position: relative; overflow: hidden;
-}
-.landing-grid {
-  position: fixed; inset: 0;
-  background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
-  pointer-events: none;
-}
-.landing-glow {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 600px; height: 600px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
+#view-landing { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
+.landing-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%); pointer-events: none; }
+.landing-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%); pointer-events: none; }
 .landing-logo { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 8px; position: relative; z-index: 1; }
 .landing-logo span { color: var(--accent); }
 .landing-sub { font-size: 13px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 60px; position: relative; z-index: 1; }
 .landing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; width: 100%; position: relative; z-index: 1; }
-.landing-card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 20px; padding: 36px 32px; cursor: pointer;
-  transition: all 0.3s; text-align: center;
-}
+.landing-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 36px 32px; cursor: pointer; transition: all 0.3s; text-align: center; }
 .landing-card:hover { border-color: var(--border-accent); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 .landing-card-icon { font-size: 40px; margin-bottom: 16px; display: block; }
 .landing-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
 .landing-card-desc { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.6; }
 
-/* ===================== ADMIN ===================== */
-.admin-nav {
-  background: rgba(8,12,16,0.95); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 40px; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
+.admin-nav { background: rgba(8,12,16,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
 .admin-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; }
 .admin-logo span { color: var(--accent); }
 .admin-nav-right { display: flex; gap: 12px; align-items: center; }
@@ -150,7 +101,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .btn-view { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
 .btn-view:hover { border-color: var(--border-accent); color: var(--accent); }
 
-/* ===================== ADD CLIENT FORM ===================== */
 .form-section { max-width: 800px; margin: 0 auto; padding: 40px; }
 .form-section h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; margin-bottom: 8px; }
 .form-section p { font-size: 14px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
@@ -162,7 +112,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .form-input, .form-select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--white); outline: none; transition: border-color 0.2s; }
 .form-input:focus, .form-select:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
 .form-input::placeholder { color: rgba(107,128,150,0.5); }
-.form-select option { background: #111820; }
 .slug-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--muted); margin-top: 8px; }
 .slug-preview span { color: var(--accent); }
 .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
@@ -172,7 +121,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .checkbox-item-label { font-size: 14px; font-weight: 500; color: var(--white); }
 .form-actions { display: flex; gap: 12px; margin-top: 32px; }
 
-/* ===================== CLIENT PORTAL ===================== */
 #view-client { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
 .client-hero { position: relative; overflow: hidden; padding: 60px 40px 48px; background: var(--bg); border-bottom: 1px solid var(--border); }
 .client-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); pointer-events: none; }
@@ -218,7 +166,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-footer-logo span { color: var(--accent); }
 .client-footer-sub { font-size: 11px; color: rgba(107,128,150,0.5); margin-top: 4px; }
 
-/* ===================== MODAL ===================== */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 480px; width: 100%; position: relative; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px; }
@@ -238,7 +185,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="view-login">
   <div class="landing-grid"></div>
   <div class="landing-glow"></div>
@@ -255,7 +201,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
-<!-- LANDING -->
 <div id="view-landing" class="hidden">
   <div class="landing-grid"></div>
   <div class="landing-glow"></div>
@@ -275,7 +220,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
-<!-- ADMIN -->
 <div id="view-admin" class="hidden">
   <nav class="admin-nav">
     <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
@@ -308,4 +252,244 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
-<!-- ADD
+<div id="view-add-client" class="hidden">
+  <nav class="admin-nav">
+    <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
+    <div class="admin-nav-right">
+      <button class="btn-secondary" onclick="showAdmin()" style="padding:8px 16px;font-size:11px;">← Back to Dashboard</button>
+    </div>
+  </nav>
+  <div class="form-section">
+    <span class="tag">— New Client</span>
+    <h1>ADD CLIENT</h1>
+    <p>Fill out the details below to add a new client and generate their unique NFC portal URL.</p>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Business Name <span>*</span></label>
+          <input type="text" class="form-input" id="input-name" placeholder="e.g. Nobu Malibu" oninput="updateSlug()">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Location <span>*</span></label>
+          <input type="text" class="form-input" id="input-location" placeholder="e.g. Malibu, CA">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Contact Name</label>
+          <input type="text" class="form-input" id="input-contact" placeholder="e.g. John Smith">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Contact Phone</label>
+          <input type="text" class="form-input" id="input-phone" placeholder="e.g. (310) 555-0000">
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Auto-Generated Portal URL</label>
+        <div class="slug-preview">portal.wifyn.com/client/<span id="slug-preview">your-client-name</span></div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Equipment Installed</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" id="eq-network" value="UniFi Network"><span class="checkbox-item-label">📡 UniFi Network</span></label>
+          <label class="checkbox-item"><input type="checkbox" id="eq-cameras" value="UniFi Cameras"><span class="checkbox-item-label">📷 UniFi Cameras</span></label>
+          <label class="checkbox-item"><input type="checkbox" id="eq-rack" value="Server Rack"><span class="checkbox-item-label">🖥️ Server Rack</span></label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="addClient()">Generate NFC URL & Add Client</button>
+        <button class="btn-secondary" onclick="showAdmin()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-client" class="hidden">
+  <div class="client-hero">
+    <div class="client-hero-grid"></div>
+    <div class="client-hero-inner">
+      <div class="client-wifi-icon">📡</div>
+      <div class="client-greeting">WiFyn Network Support</div>
+      <div class="client-name" id="client-display-name">CLIENT NAME</div>
+      <div class="client-location" id="client-display-location">📍 Location</div>
+      <div class="client-status"><span class="client-status-dot"></span>System Online</div>
+    </div>
+  </div>
+  <div class="client-body">
+    <div style="margin-bottom:8px;"><span class="tag">— Need Help?</span></div>
+    <div class="client-contact-btns">
+      <a href="tel:+18183909252" class="client-contact-btn client-btn-call">
+        <span class="client-contact-btn-icon">📞</span>
+        <span class="client-contact-btn-label">Call Us Now</span>
+        <span class="client-contact-btn-value">(818) 390-9252</span>
+      </a>
+      <a href="mailto:wifynconsultant@gmail.com" class="client-contact-btn client-btn-email">
+        <span class="client-contact-btn-icon">✉️</span>
+        <span class="client-contact-btn-label">Send Email</span>
+        <span class="client-contact-btn-value">wifynconsultant@gmail.com</span>
+      </a>
+    </div>
+    <div class="client-section-title">YOUR EQUIPMENT</div>
+    <div class="client-equipment" id="client-equipment-list"></div>
+    <div class="client-issue-card">
+      <div class="client-issue-title">REPORT AN ISSUE</div>
+      <div id="issue-form-content">
+        <div class="issue-btns">
+          <button class="issue-btn" onclick="selectIssue(this, 'Wi-Fi Down')"><span class="issue-btn-icon">📶</span> Wi-Fi Down</button>
+          <button class="issue-btn" onclick="selectIssue(this, 'Internet Down')"><span class="issue-btn-icon">🌐</span> Internet Down</button>
+          <button class="issue-btn" onclick="selectIssue(this, 'General Support')"><span class="issue-btn-icon">🛠️</span> General Support</button>
+        </div>
+        <textarea class="issue-textarea" id="issue-details" placeholder="Describe the issue in more detail (optional)..."></textarea>
+        <button class="issue-submit" onclick="submitIssue()">→ Send Report to WiFyn</button>
+      </div>
+      <div class="issue-success" id="issue-success">
+        <div class="issue-success-icon">✅</div>
+        <h3>Report Sent!</h3>
+        <p>WiFyn has been notified and will contact you shortly.<br>Average response time: under 2 hours.</p>
+      </div>
+    </div>
+  </div>
+  <div class="client-footer">
+    <div class="client-footer-logo">WI<span>FYN</span></div>
+    <div class="client-footer-sub">Certified Ubiquiti UniFi Installer · Los Angeles, CA</div>
+  </div>
+  <div style="text-align:center;padding:16px 24px 32px;">
+    <button class="btn-secondary" onclick="showAdmin()" style="font-size:11px;padding:8px 16px;">← Back to Admin</button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="nfc-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <span class="tag">— NFC Tag</span>
+    <h2>NFC TAG PREVIEW</h2>
+    <p>Program this URL to your NFC tag using the NFC Tools app. Stick the tag inside the server rack door.</p>
+    <div class="nfc-tag-preview">
+      <div class="nfc-tag-logo">WI<span>FYN</span></div>
+      <div class="nfc-tag-client" id="modal-client-name">Client Name</div>
+      <div class="nfc-tag-icon">📲</div>
+      <div class="nfc-tag-scan">TAP TO REPORT AN ISSUE</div>
+      <div class="nfc-tag-url" id="modal-nfc-url">portal.wifyn.com/client/...</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="copyNFCUrl()" id="modal-copy-btn">Copy NFC URL</button>
+      <button class="btn-secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = '3C06_ing';
+let loginAttempts = 0;
+let isAuthenticated = false;
+let clients = [];
+let selectedIssue = '';
+let currentModalUrl = '';
+
+function submitLogin() {
+  const input = document.getElementById('login-password').value;
+  const error = document.getElementById('login-error');
+  const attempts = document.getElementById('login-attempts');
+  if (input === ADMIN_PASSWORD) {
+    isAuthenticated = true;
+    loginAttempts = 0;
+    error.classList.remove('show');
+    document.getElementById('login-password').value = '';
+    showLanding();
+  } else {
+    loginAttempts++;
+    error.classList.add('show');
+    document.getElementById('login-password').value = '';
+    if (loginAttempts >= 3) attempts.textContent = loginAttempts + ' failed attempts';
+  }
+}
+
+function showLogin() { hideAll(); document.getElementById('view-login').classList.remove('hidden'); }
+function showLanding() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-landing').classList.remove('hidden'); }
+function showAdmin() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-admin').classList.remove('hidden'); renderClients(clients); updateStats(); }
+function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
+function hideAll() { ['view-login','view-landing','view-admin','view-add-client','view-client'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
+
+function showClientPortal(client) {
+  hideAll();
+  document.getElementById('view-client').classList.remove('hidden');
+  document.getElementById('client-display-name').textContent = client.name.toUpperCase();
+  document.getElementById('client-display-location').textContent = '📍 ' + client.location;
+  var eqList = document.getElementById('client-equipment-list');
+  eqList.innerHTML = '';
+  client.equipment.forEach(function(eq) {
+    var badge = document.createElement('div');
+    badge.className = 'client-eq-badge ' + getEqClass(eq);
+    badge.innerHTML = getEqIcon(eq) + ' ' + eq;
+    eqList.appendChild(badge);
+  });
+  document.getElementById('issue-form-content').style.display = 'block';
+  document.getElementById('issue-success').style.display = 'none';
+  selectedIssue = '';
+  document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); });
+}
+
+function showClientDemo() { showClientPortal(clients[0] || {name:'Demo Client',location:'Los Angeles, CA',equipment:['UniFi Network','Server Rack']}); }
+
+function renderClients(list) {
+  var tbody = document.getElementById('clients-table-body');
+  tbody.innerHTML = '';
+  if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>'; return; }
+  list.forEach(function(client) {
+    var url = 'portal.wifyn.com/client/' + client.slug;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><div class="client-name-cell">' + client.name + '</div><div class="client-location-cell">📍 ' + client.location + '</div></td><td><div class="equipment-tags">' + client.equipment.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('') + '</div></td><td><div class="url-cell">portal.wifyn.com/client/<span>' + client.slug + '</span></div></td><td><span class="status-dot status-active"></span><span style="font-size:12px;color:var(--green);">Active</span></td><td><div class="action-btns"><button class="btn-copy" onclick="copyUrl(\'' + url + '\', this)">Copy URL</button><button class="btn-view" onclick="showNFCModal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">NFC Tag</button><button class="btn-view" onclick="showClientPortal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">Preview</button><button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button></div></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function addClient() {
+  var name = document.getElementById('input-name').value.trim();
+  var location = document.getElementById('input-location').value.trim();
+  var contact = document.getElementById('input-contact').value.trim();
+  var phone = document.getElementById('input-phone').value.trim();
+  if (!name || !location) { alert('Please fill in Business Name and Location'); return; }
+  var equipment = [];
+  if (document.getElementById('eq-network').checked) equipment.push('UniFi Network');
+  if (document.getElementById('eq-cameras').checked) equipment.push('UniFi Cameras');
+  if (document.getElementById('eq-rack').checked) equipment.push('Server Rack');
+  var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  var newClient = { id: Date.now(), name: name, location: location, contact: contact, phone: phone, slug: slug, equipment: equipment, status: 'active' };
+  clients.unshift(newClient);
+  saveClients();
+  showAdmin();
+  setTimeout(function() { showNFCModal(newClient); }, 300);
+  document.getElementById('input-name').value = '';
+  document.getElementById('input-location').value = '';
+  document.getElementById('input-contact').value = '';
+  document.getElementById('input-phone').value = '';
+  document.getElementById('eq-network').checked = false;
+  document.getElementById('eq-cameras').checked = false;
+  document.getElementById('eq-rack').checked = false;
+  document.getElementById('slug-preview').textContent = 'your-client-name';
+}
+
+function deleteClient(id) { if (confirm('Delete this client?')) { clients = clients.filter(function(c) { return c.id !== id; }); saveClients(); renderClients(clients); updateStats(); } }
+function filterClients(query) { var filtered = clients.filter(function(c) { return c.name.toLowerCase().includes(query.toLowerCase()) || c.location.toLowerCase().includes(query.toLowerCase()); }); renderClients(filtered); }
+function updateStats() { document.getElementById('stat-total').textContent = clients.length; document.getElementById('stat-active').textContent = clients.filter(function(c) { return c.status === 'active'; }).length; document.getElementById('stat-nfc').textContent = clients.length; }
+function updateSlug() { var name = document.getElementById('input-name').value.trim(); var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'your-client-name'; document.getElementById('slug-preview').textContent = slug; }
+function saveClients() { try { localStorage.setItem('wifyn_clients', JSON.stringify(clients)); } catch(e) {} }
+function loadClients() { try { var saved = localStorage.getItem('wifyn_clients'); if (saved) clients = JSON.parse(saved); } catch(e) {} }
+
+function showNFCModal(client) { var url = 'portal.wifyn.com/client/' + client.slug; currentModalUrl = url; document.getElementById('modal-client-name').textContent = client.name; document.getElementById('modal-nfc-url').textContent = url; document.getElementById('nfc-modal').classList.remove('hidden'); }
+function closeModal() { document.getElementById('nfc-modal').classList.add('hidden'); document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }
+function copyNFCUrl() { navigator.clipboard.writeText('https://' + currentModalUrl).then(function() { document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function() { document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }, 2000); }).catch(function() { document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function() { document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }, 2000); }); }
+function copyUrl(url, btn) { navigator.clipboard.writeText('https://' + url).catch(function() {}); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = 'Copy URL'; btn.classList.remove('copied'); }, 2000); }
+
+function selectIssue(btn, issue) { document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); }); btn.classList.add('selected'); selectedIssue = issue; }
+function submitIssue() { if (!selectedIssue) { alert('Please select an issue type first'); return; } document.getElementById('issue-form-content').style.display = 'none'; document.getElementById('issue-success').style.display = 'block'; }
+
+function getEqClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
+function getEqTagClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
+function getEqIcon(eq) { if (eq === 'UniFi Network') return '📡'; if (eq === 'UniFi Cameras') return '📷'; return '🖥️'; }
+
+loadClients();
+showLogin();
+</script>
+</body>
+</html>
