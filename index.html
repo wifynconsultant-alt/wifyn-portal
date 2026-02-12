@@ -31,6 +31,43 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .btn-danger { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,59,48,0.1); color: #ff3b30; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,59,48,0.2); cursor: pointer; transition: all 0.25s; }
 .btn-danger:hover { background: rgba(255,59,48,0.2); }
 
+/* ===================== LOGIN ===================== */
+#view-login {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px; position: relative; overflow: hidden;
+}
+.login-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 24px; padding: 48px 40px;
+  width: 100%; max-width: 400px; position: relative; z-index: 2;
+  text-align: center;
+}
+.login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 4px; }
+.login-logo span { color: var(--accent); }
+.login-subtitle { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: block; }
+.login-icon { font-size: 40px; margin-bottom: 16px; }
+.login-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
+.login-desc { font-size: 13px; font-weight: 300; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+.login-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px; font-family: 'Outfit', sans-serif;
+  font-size: 16px; color: var(--white); outline: none; text-align: center;
+  letter-spacing: 0.1em; transition: border-color 0.2s; margin-bottom: 16px;
+}
+.login-input:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
+.login-input::placeholder { color: rgba(107,128,150,0.4); letter-spacing: 0.05em; }
+.login-btn {
+  width: 100%; background: var(--accent); color: var(--bg);
+  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; padding: 16px;
+  border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s;
+}
+.login-btn:hover { background: #00cef5; box-shadow: 0 0 24px rgba(0,229,255,0.4); }
+.login-error { font-size: 12px; color: #ff3b30; margin-top: 12px; display: none; }
+.login-error.show { display: block; }
+.login-attempts { font-size: 11px; color: var(--muted); margin-top: 12px; }
+
 /* ===================== VIEWS ===================== */
 #view-landing, #view-admin, #view-client, #view-add-client { min-height: 100vh; }
 
@@ -77,18 +114,13 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .admin-logo span { color: var(--accent); }
 .admin-nav-right { display: flex; gap: 12px; align-items: center; }
 .admin-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 4px 12px; border-radius: 100px; }
-
 .admin-main { padding: 40px; max-width: 1400px; margin: 0 auto; }
 .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
 .admin-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; color: var(--white); }
-
-/* Stats */
 .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
 .admin-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
 .admin-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
 .admin-stat-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-
-/* Client table */
 .admin-table-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
 .admin-table-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .admin-table-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; }
@@ -118,11 +150,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .btn-view { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
 .btn-view:hover { border-color: var(--border-accent); color: var(--accent); }
 
-/* QR Preview */
-.qr-preview { text-align: center; padding: 16px; background: white; border-radius: 12px; display: inline-block; }
-.qr-grid { display: grid; grid-template-columns: repeat(10, 12px); grid-template-rows: repeat(10, 12px); gap: 1px; }
-.qr-cell { width: 12px; height: 12px; border-radius: 2px; }
-
 /* ===================== ADD CLIENT FORM ===================== */
 .form-section { max-width: 800px; margin: 0 auto; padding: 40px; }
 .form-section h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; margin-bottom: 8px; }
@@ -146,24 +173,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .form-actions { display: flex; gap: 12px; margin-top: 32px; }
 
 /* ===================== CLIENT PORTAL ===================== */
-#view-client {
-  min-height: 100vh;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-}
-.client-hero {
-  position: relative; overflow: hidden;
-  padding: 60px 40px 48px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-}
-.client-hero-grid {
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-  pointer-events: none;
-}
+#view-client { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+.client-hero { position: relative; overflow: hidden; padding: 60px 40px 48px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.client-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); pointer-events: none; }
 .client-hero-inner { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; text-align: center; }
 .client-wifi-icon { font-size: 48px; margin-bottom: 16px; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
@@ -173,16 +185,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-status { display: inline-flex; align-items: center; gap: 8px; background: rgba(40,200,64,0.1); border: 1px solid rgba(40,200,64,0.2); border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 600; color: var(--green); }
 .client-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
 .client-body { padding: 32px 24px; max-width: 600px; margin: 0 auto; width: 100%; flex: 1; }
-
-/* Contact buttons */
 .client-contact-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-.client-contact-btn {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; padding: 24px 16px; border-radius: 16px;
-  text-decoration: none; transition: all 0.25s; border: 1px solid;
-}
+.client-contact-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 16px; border-radius: 16px; text-decoration: none; transition: all 0.25s; border: 1px solid; }
 .client-contact-btn-icon { font-size: 28px; }
 .client-contact-btn-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .client-contact-btn-value { font-size: 13px; font-weight: 500; }
@@ -190,13 +195,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-btn-call:hover { background: rgba(0,229,255,0.15); transform: translateY(-2px); }
 .client-btn-email { background: rgba(255,255,255,0.04); border-color: var(--border); color: var(--white); }
 .client-btn-email:hover { border-color: var(--border-accent); color: var(--accent); transform: translateY(-2px); }
-
-/* Equipment */
 .client-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 12px; }
 .client-equipment { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
 .client-eq-badge { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; }
-
-/* Issue form */
 .client-issue-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 28px; }
 .client-issue-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 16px; }
 .issue-btns { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
@@ -208,35 +209,24 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .issue-textarea::placeholder { color: rgba(107,128,150,0.4); }
 .issue-submit { width: 100%; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; }
 .issue-submit:hover { background: #00cef5; box-shadow: 0 0 24px rgba(0,229,255,0.4); }
-
-/* Success state */
 .issue-success { text-align: center; padding: 32px; display: none; }
 .issue-success-icon { font-size: 48px; margin-bottom: 12px; }
 .issue-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); margin-bottom: 8px; }
 .issue-success p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-/* Client footer */
 .client-footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); }
 .client-footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; color: var(--muted); }
 .client-footer-logo span { color: var(--accent); }
 .client-footer-sub { font-size: 11px; color: rgba(107,128,150,0.5); margin-top: 4px; }
 
-/* NFC Tag preview modal */
+/* ===================== MODAL ===================== */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 480px; width: 100%; position: relative; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px; }
 .modal-close:hover { color: var(--white); }
 .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; margin-bottom: 8px; }
 .modal p { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-.nfc-tag-preview {
-  background: var(--bg); border: 2px solid var(--border-accent);
-  border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 24px;
-  position: relative; overflow: hidden;
-}
-.nfc-tag-preview::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 70%);
-}
+.nfc-tag-preview { background: var(--bg); border: 2px solid var(--border-accent); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
+.nfc-tag-preview::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 70%); }
 .nfc-tag-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; color: var(--white); margin-bottom: 4px; position: relative; }
 .nfc-tag-logo span { color: var(--accent); }
 .nfc-tag-client { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 16px; position: relative; }
@@ -248,8 +238,25 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 </head>
 <body>
 
-<!-- ==================== LANDING ==================== -->
-<div id="view-landing">
+<!-- LOGIN -->
+<div id="view-login">
+  <div class="landing-grid"></div>
+  <div class="landing-glow"></div>
+  <div class="login-card">
+    <div class="login-logo">WI<span>FYN</span></div>
+    <span class="login-subtitle">Client Portal System</span>
+    <div class="login-icon">🔒</div>
+    <div class="login-title">ADMIN ACCESS</div>
+    <div class="login-desc">Enter your password to access the admin panel.</div>
+    <input type="password" class="login-input" id="login-password" placeholder="Enter password" onkeydown="if(event.key==='Enter') submitLogin()">
+    <button class="login-btn" onclick="submitLogin()">→ Access Admin Panel</button>
+    <div class="login-error" id="login-error">❌ Incorrect password. Please try again.</div>
+    <div class="login-attempts" id="login-attempts"></div>
+  </div>
+</div>
+
+<!-- LANDING -->
+<div id="view-landing" class="hidden">
   <div class="landing-grid"></div>
   <div class="landing-glow"></div>
   <div class="landing-logo">WI<span>FYN</span></div>
@@ -268,7 +275,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
-<!-- ==================== ADMIN PANEL ==================== -->
+<!-- ADMIN -->
 <div id="view-admin" class="hidden">
   <nav class="admin-nav">
     <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
@@ -277,503 +284,28 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       <button class="btn-secondary" onclick="showLanding()" style="padding:8px 16px;font-size:11px;">← Back</button>
     </div>
   </nav>
-
   <div class="admin-main">
     <div class="admin-header">
       <h1>CLIENT DASHBOARD</h1>
       <button class="btn-primary" onclick="showAddClient()">+ Add New Client</button>
     </div>
-
-    <!-- Stats -->
     <div class="admin-stats">
-      <div class="admin-stat">
-        <div class="admin-stat-num" id="stat-total">0</div>
-        <div class="admin-stat-label">Total Clients</div>
-      </div>
-      <div class="admin-stat">
-        <div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div>
-        <div class="admin-stat-label">Active</div>
-      </div>
-      <div class="admin-stat">
-        <div class="admin-stat-num" id="stat-nfc">0</div>
-        <div class="admin-stat-label">NFC Tags Generated</div>
-      </div>
-      <div class="admin-stat">
-        <div class="admin-stat-num" style="color:var(--orange);">$0</div>
-        <div class="admin-stat-label">MRR (Coming Soon)</div>
-      </div>
+      <div class="admin-stat"><div class="admin-stat-num" id="stat-total">0</div><div class="admin-stat-label">Total Clients</div></div>
+      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div><div class="admin-stat-label">Active</div></div>
+      <div class="admin-stat"><div class="admin-stat-num" id="stat-nfc">0</div><div class="admin-stat-label">NFC Tags Generated</div></div>
+      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--orange);">$0</div><div class="admin-stat-label">MRR (Coming Soon)</div></div>
     </div>
-
-    <!-- Client Table -->
     <div class="admin-table-wrap">
       <div class="admin-table-header">
         <div class="admin-table-title">ALL CLIENTS</div>
         <input type="text" class="admin-search" placeholder="Search clients..." oninput="filterClients(this.value)">
       </div>
       <table>
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Equipment</th>
-            <th>Portal URL</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="clients-table-body">
-        </tbody>
+        <thead><tr><th>Client</th><th>Equipment</th><th>Portal URL</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="clients-table-body"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ==================== ADD CLIENT ==================== -->
-<div id="view-add-client" class="hidden">
-  <nav class="admin-nav">
-    <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
-    <div class="admin-nav-right">
-      <button class="btn-secondary" onclick="showAdmin()" style="padding:8px 16px;font-size:11px;">← Back to Dashboard</button>
-    </div>
-  </nav>
-
-  <div class="form-section">
-    <span class="tag">— New Client</span>
-    <h1>ADD CLIENT</h1>
-    <p>Fill out the details below to add a new client and generate their unique NFC portal URL.</p>
-
-    <div class="form-card">
-      <div class="form-row">
-        <div class="form-field">
-          <label class="form-label">Business Name <span>*</span></label>
-          <input type="text" class="form-input" id="input-name" placeholder="e.g. Nobu Malibu" oninput="updateSlug()">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Location <span>*</span></label>
-          <input type="text" class="form-input" id="input-location" placeholder="e.g. Malibu, CA">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label class="form-label">Contact Name</label>
-          <input type="text" class="form-input" id="input-contact" placeholder="e.g. John Smith">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Contact Phone</label>
-          <input type="text" class="form-input" id="input-phone" placeholder="e.g. (310) 555-0000">
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label class="form-label">Auto-Generated Portal URL</label>
-        <div class="slug-preview">portal.wifyn.com/client/<span id="slug-preview">your-client-name</span></div>
-      </div>
-
-      <div class="form-field">
-        <label class="form-label">Equipment Installed</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
-            <input type="checkbox" id="eq-network" value="UniFi Network">
-            <span class="checkbox-item-label">📡 UniFi Network</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" id="eq-cameras" value="UniFi Cameras">
-            <span class="checkbox-item-label">📷 UniFi Cameras</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" id="eq-rack" value="Server Rack">
-            <span class="checkbox-item-label">🖥️ Server Rack</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn-primary" onclick="addClient()">Generate NFC URL & Add Client</button>
-        <button class="btn-secondary" onclick="showAdmin()">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== CLIENT PORTAL ==================== -->
-<div id="view-client" class="hidden">
-  <div class="client-hero">
-    <div class="client-hero-grid"></div>
-    <div class="client-hero-inner">
-      <div class="client-wifi-icon">📡</div>
-      <div class="client-greeting">WiFyn Network Support</div>
-      <div class="client-name" id="client-display-name">CLIENT NAME</div>
-      <div class="client-location" id="client-display-location">📍 Location</div>
-      <div class="client-status">
-        <span class="client-status-dot"></span>
-        System Online
-      </div>
-    </div>
-  </div>
-
-  <div class="client-body">
-    <!-- Contact buttons -->
-    <div style="margin-bottom:8px;"><span class="tag">— Need Help?</span></div>
-    <div class="client-contact-btns">
-      <a href="tel:+18183909252" class="client-contact-btn client-btn-call">
-        <span class="client-contact-btn-icon">📞</span>
-        <span class="client-contact-btn-label">Call Us Now</span>
-        <span class="client-contact-btn-value">(818) 390-9252</span>
-      </a>
-      <a href="mailto:wifynconsultant@gmail.com" class="client-contact-btn client-btn-email">
-        <span class="client-contact-btn-icon">✉️</span>
-        <span class="client-contact-btn-label">Send Email</span>
-        <span class="client-contact-btn-value">wifynconsultant@gmail.com</span>
-      </a>
-    </div>
-
-    <!-- Equipment -->
-    <div class="client-section-title">YOUR EQUIPMENT</div>
-    <div class="client-equipment" id="client-equipment-list"></div>
-
-    <!-- Issue form -->
-    <div class="client-issue-card">
-      <div class="client-issue-title">REPORT AN ISSUE</div>
-      <div id="issue-form-content">
-        <div class="issue-btns">
-          <button class="issue-btn" onclick="selectIssue(this, 'Wi-Fi Down')">
-            <span class="issue-btn-icon">📶</span> Wi-Fi Down
-          </button>
-          <button class="issue-btn" onclick="selectIssue(this, 'Internet Down')">
-            <span class="issue-btn-icon">🌐</span> Internet Down
-          </button>
-          <button class="issue-btn" onclick="selectIssue(this, 'General Support')">
-            <span class="issue-btn-icon">🛠️</span> General Support
-          </button>
-        </div>
-        <textarea class="issue-textarea" id="issue-details" placeholder="Describe the issue in more detail (optional)..."></textarea>
-        <button class="issue-submit" onclick="submitIssue()">→ Send Report to WiFyn</button>
-      </div>
-      <div class="issue-success" id="issue-success">
-        <div class="issue-success-icon">✅</div>
-        <h3>Report Sent!</h3>
-        <p>WiFyn has been notified and will contact you shortly.<br>Average response time: under 2 hours.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="client-footer">
-    <div class="client-footer-logo">WI<span>FYN</span></div>
-    <div class="client-footer-sub">Certified Ubiquiti UniFi Installer · Los Angeles, CA</div>
-  </div>
-
-  <div style="text-align:center;padding:16px 24px 32px;">
-    <button class="btn-secondary" onclick="showAdmin()" style="font-size:11px;padding:8px 16px;">← Back to Admin</button>
-  </div>
-</div>
-
-<!-- NFC Modal -->
-<div class="modal-overlay hidden" id="nfc-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <span class="tag">— NFC Tag</span>
-    <h2>NFC TAG PREVIEW</h2>
-    <p>Program this URL to your NFC tag using the NFC Tools app. Stick the tag inside the server rack door.</p>
-
-    <div class="nfc-tag-preview">
-      <div class="nfc-tag-logo">WI<span>FYN</span></div>
-      <div class="nfc-tag-client" id="modal-client-name">Client Name</div>
-      <div class="nfc-tag-icon">📲</div>
-      <div class="nfc-tag-scan">TAP TO REPORT AN ISSUE</div>
-      <div class="nfc-tag-url" id="modal-nfc-url">portal.wifyn.com/client/...</div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-primary" onclick="copyNFCUrl()" id="modal-copy-btn">Copy NFC URL</button>
-      <button class="btn-secondary" onclick="closeModal()">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ==================== DATA ====================
-let clients = [
-  {
-    id: 1,
-    name: "Nobu Malibu",
-    location: "Malibu, CA",
-    contact: "Manager",
-    phone: "(310) 555-0100",
-    slug: "nobu-malibu",
-    equipment: ["UniFi Network", "UniFi Cameras", "Server Rack"],
-    status: "active"
-  },
-  {
-    id: 2,
-    name: "Blue Bottle Coffee",
-    location: "Silver Lake, CA",
-    contact: "Store Manager",
-    phone: "(323) 555-0200",
-    slug: "blue-bottle-silver-lake",
-    equipment: ["UniFi Network", "Server Rack"],
-    status: "active"
-  },
-  {
-    id: 3,
-    name: "Soho House",
-    location: "West Hollywood, CA",
-    contact: "IT Director",
-    phone: "(310) 555-0300",
-    slug: "soho-house-weho",
-    equipment: ["UniFi Network", "UniFi Cameras"],
-    status: "active"
-  }
-];
-
-let selectedIssue = '';
-let currentModalUrl = '';
-
-// ==================== NAVIGATION ====================
-function showLanding() {
-  hideAll();
-  document.getElementById('view-landing').classList.remove('hidden');
-}
-
-function showAdmin() {
-  hideAll();
-  document.getElementById('view-admin').classList.remove('hidden');
-  renderClients(clients);
-  updateStats();
-}
-
-function showAddClient() {
-  hideAll();
-  document.getElementById('view-add-client').classList.remove('hidden');
-}
-
-function showClientPortal(client) {
-  hideAll();
-  document.getElementById('view-client').classList.remove('hidden');
-
-  document.getElementById('client-display-name').textContent = client.name.toUpperCase();
-  document.getElementById('client-display-location').textContent = '📍 ' + client.location;
-
-  const eqList = document.getElementById('client-equipment-list');
-  eqList.innerHTML = '';
-  client.equipment.forEach(eq => {
-    const badge = document.createElement('div');
-    badge.className = 'client-eq-badge ' + getEqClass(eq);
-    badge.innerHTML = getEqIcon(eq) + ' ' + eq;
-    eqList.appendChild(badge);
-  });
-
-  document.getElementById('issue-form-content').style.display = 'block';
-  document.getElementById('issue-success').style.display = 'none';
-  selectedIssue = '';
-  document.querySelectorAll('.issue-btn').forEach(b => b.classList.remove('selected'));
-}
-
-function showClientDemo() {
-  showClientPortal(clients[0]);
-}
-
-function hideAll() {
-  ['view-landing','view-admin','view-add-client','view-client'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
-  });
-}
-
-// ==================== CLIENT MANAGEMENT ====================
-function renderClients(list) {
-  const tbody = document.getElementById('clients-table-body');
-  tbody.innerHTML = '';
-
-  if (list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients found</td></tr>';
-    return;
-  }
-
-  list.forEach(client => {
-    const url = `portal.wifyn.com/client/${client.slug}`;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div class="client-name-cell">${client.name}</div>
-        <div class="client-location-cell">📍 ${client.location}</div>
-      </td>
-      <td>
-        <div class="equipment-tags">
-          ${client.equipment.map(eq => `<span class="eq-tag ${getEqTagClass(eq)}">${eq}</span>`).join('')}
-        </div>
-      </td>
-      <td>
-        <div class="url-cell">portal.wifyn.com/client/<span>${client.slug}</span></div>
-      </td>
-      <td>
-        <span class="status-dot status-active"></span>
-        <span style="font-size:12px;color:var(--green);">Active</span>
-      </td>
-      <td>
-        <div class="action-btns">
-          <button class="btn-copy" onclick="copyUrl('${url}', this)">Copy URL</button>
-          <button class="btn-view" onclick='showNFCModal(${JSON.stringify(client)})'>NFC Tag</button>
-          <button class="btn-view" onclick='showClientPortal(${JSON.stringify(client)})'>Preview</button>
-          <button class="btn-danger" onclick="deleteClient(${client.id})">Delete</button>
-        </div>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function addClient() {
-  const name = document.getElementById('input-name').value.trim();
-  const location = document.getElementById('input-location').value.trim();
-  const contact = document.getElementById('input-contact').value.trim();
-  const phone = document.getElementById('input-phone').value.trim();
-
-  if (!name || !location) {
-    alert('Please fill in Business Name and Location');
-    return;
-  }
-
-  const equipment = [];
-  if (document.getElementById('eq-network').checked) equipment.push('UniFi Network');
-  if (document.getElementById('eq-cameras').checked) equipment.push('UniFi Cameras');
-  if (document.getElementById('eq-rack').checked) equipment.push('Server Rack');
-
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-  const newClient = {
-    id: Date.now(),
-    name, location, contact, phone, slug, equipment, status: 'active'
-  };
-
-  clients.unshift(newClient);
-  saveClients();
-
-  // Show NFC modal for the new client
-  showAdmin();
-  setTimeout(() => showNFCModal(newClient), 300);
-
-  // Reset form
-  document.getElementById('input-name').value = '';
-  document.getElementById('input-location').value = '';
-  document.getElementById('input-contact').value = '';
-  document.getElementById('input-phone').value = '';
-  document.getElementById('eq-network').checked = false;
-  document.getElementById('eq-cameras').checked = false;
-  document.getElementById('eq-rack').checked = false;
-  document.getElementById('slug-preview').textContent = 'your-client-name';
-}
-
-function deleteClient(id) {
-  if (confirm('Delete this client?')) {
-    clients = clients.filter(c => c.id !== id);
-    saveClients();
-    renderClients(clients);
-    updateStats();
-  }
-}
-
-function filterClients(query) {
-  const filtered = clients.filter(c =>
-    c.name.toLowerCase().includes(query.toLowerCase()) ||
-    c.location.toLowerCase().includes(query.toLowerCase())
-  );
-  renderClients(filtered);
-}
-
-function updateStats() {
-  document.getElementById('stat-total').textContent = clients.length;
-  document.getElementById('stat-active').textContent = clients.filter(c => c.status === 'active').length;
-  document.getElementById('stat-nfc').textContent = clients.length;
-}
-
-function updateSlug() {
-  const name = document.getElementById('input-name').value.trim();
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'your-client-name';
-  document.getElementById('slug-preview').textContent = slug;
-}
-
-function saveClients() {
-  try { localStorage.setItem('wifyn_clients', JSON.stringify(clients)); } catch(e) {}
-}
-
-function loadClients() {
-  try {
-    const saved = localStorage.getItem('wifyn_clients');
-    if (saved) clients = JSON.parse(saved);
-  } catch(e) {}
-}
-
-// ==================== NFC MODAL ====================
-function showNFCModal(client) {
-  const url = `portal.wifyn.com/client/${client.slug}`;
-  currentModalUrl = url;
-  document.getElementById('modal-client-name').textContent = client.name;
-  document.getElementById('modal-nfc-url').textContent = url;
-  document.getElementById('nfc-modal').classList.remove('hidden');
-}
-
-function closeModal() {
-  document.getElementById('nfc-modal').classList.add('hidden');
-  document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL';
-}
-
-function copyNFCUrl() {
-  navigator.clipboard.writeText('https://' + currentModalUrl).then(() => {
-    document.getElementById('modal-copy-btn').textContent = '✓ Copied!';
-    setTimeout(() => document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL', 2000);
-  }).catch(() => {
-    document.getElementById('modal-copy-btn').textContent = '✓ Copied!';
-    setTimeout(() => document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL', 2000);
-  });
-}
-
-function copyUrl(url, btn) {
-  navigator.clipboard.writeText('https://' + url).catch(() => {});
-  btn.textContent = '✓ Copied!';
-  btn.classList.add('copied');
-  setTimeout(() => {
-    btn.textContent = 'Copy URL';
-    btn.classList.remove('copied');
-  }, 2000);
-}
-
-// ==================== ISSUE REPORT ====================
-function selectIssue(btn, issue) {
-  document.querySelectorAll('.issue-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedIssue = issue;
-}
-
-function submitIssue() {
-  if (!selectedIssue) {
-    alert('Please select an issue type first');
-    return;
-  }
-  document.getElementById('issue-form-content').style.display = 'none';
-  document.getElementById('issue-success').style.display = 'block';
-}
-
-// ==================== HELPERS ====================
-function getEqClass(eq) {
-  if (eq === 'UniFi Network') return 'eq-network';
-  if (eq === 'UniFi Cameras') return 'eq-cameras';
-  return 'eq-rack';
-}
-
-function getEqTagClass(eq) {
-  if (eq === 'UniFi Network') return 'eq-network';
-  if (eq === 'UniFi Cameras') return 'eq-cameras';
-  return 'eq-rack';
-}
-
-function getEqIcon(eq) {
-  if (eq === 'UniFi Network') return '📡';
-  if (eq === 'UniFi Cameras') return '📷';
-  return '🖥️';
-}
-
-// ==================== INIT ====================
-loadClients();
-showLanding();
-</script>
-</body>
-</html>
+<!-- ADD
