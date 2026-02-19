@@ -632,6 +632,19 @@ function submitIssue() {
   };
   tickets.unshift(ticket);
   saveTickets();
+  
+  fetch('https://script.google.com/macros/s/AKfycby6v53TGufAk-MCvTFAIOEY6f0rsb_ZqDn6JKVQnanaOxLLvqLS3-C3ZFvWAIE_UW0I/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      clientName: currentClient.name,
+      location: currentClient.location,
+      issueType: selectedIssue,
+      details: details || 'No additional details provided'
+    })
+  }).catch(function(err) { console.log('Sheet update failed:', err); });
+  
   document.getElementById('issue-form-content').style.display = 'none';
   document.getElementById('issue-success').style.display = 'block';
 }
