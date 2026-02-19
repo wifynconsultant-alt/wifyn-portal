@@ -10,7 +10,6 @@
 :root {
   --bg: #080c10;
   --panel: #111820;
-  --panel2: #0d1520;
   --accent: #00e5ff;
   --orange: #ff6b35;
   --green: #28c840;
@@ -65,13 +64,27 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .admin-logo span { color: var(--accent); }
 .admin-nav-right { display: flex; gap: 12px; align-items: center; }
 .admin-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 4px 12px; border-radius: 100px; }
+
 .admin-main { padding: 40px; max-width: 1400px; margin: 0 auto; }
 .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
 .admin-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; color: var(--white); }
+
+.admin-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.admin-tab { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 24px; background: transparent; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; position: relative; top: 1px; }
+.admin-tab:hover { color: var(--white); }
+.admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.ticket-count { background: var(--orange); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: 6px; }
+
 .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
 .admin-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
 .admin-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
 .admin-stat-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.ticket-filters { display: flex; gap: 12px; margin-bottom: 20px; }
+.filter-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+.filter-btn:hover { border-color: var(--border-accent); }
+.filter-btn.active { background: rgba(0,229,255,0.1); border-color: var(--accent); color: var(--accent); }
+
 .admin-table-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
 .admin-table-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .admin-table-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; }
@@ -94,12 +107,19 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .status-active { background: var(--green); box-shadow: 0 0 8px var(--green); }
 .url-cell { font-family: 'Courier New', monospace; font-size: 11px; color: var(--muted); }
 .url-cell span { color: var(--accent); }
-.action-btns { display: flex; gap: 8px; }
+.action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn-copy { background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.15); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
 .btn-copy:hover { background: rgba(0,229,255,0.15); }
 .btn-copy.copied { background: rgba(40,200,64,0.1); border-color: rgba(40,200,64,0.2); color: var(--green); }
 .btn-view { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
 .btn-view:hover { border-color: var(--border-accent); color: var(--accent); }
+
+.ticket-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; }
+.ticket-new { background: rgba(255,107,53,0.15); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+.ticket-open { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+.ticket-closed { background: rgba(107,128,150,0.1); color: var(--muted); border: 1px solid rgba(107,128,150,0.2); }
+.ticket-details { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; max-width: 300px; }
+.ticket-time { font-size: 11px; color: var(--muted); }
 
 .form-section { max-width: 800px; margin: 0 auto; padding: 40px; }
 .form-section h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; margin-bottom: 8px; }
@@ -230,24 +250,50 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </nav>
   <div class="admin-main">
     <div class="admin-header">
-      <h1>CLIENT DASHBOARD</h1>
+      <h1>DASHBOARD</h1>
       <button class="btn-primary" onclick="showAddClient()">+ Add New Client</button>
     </div>
-    <div class="admin-stats">
-      <div class="admin-stat"><div class="admin-stat-num" id="stat-total">0</div><div class="admin-stat-label">Total Clients</div></div>
-      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div><div class="admin-stat-label">Active</div></div>
-      <div class="admin-stat"><div class="admin-stat-num" id="stat-nfc">0</div><div class="admin-stat-label">NFC Tags Generated</div></div>
-      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--orange);">$0</div><div class="admin-stat-label">MRR (Coming Soon)</div></div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('clients')">Clients</button>
+      <button class="admin-tab" onclick="switchTab('tickets')">Tickets <span class="ticket-count" id="open-ticket-count">0</span></button>
     </div>
-    <div class="admin-table-wrap">
-      <div class="admin-table-header">
-        <div class="admin-table-title">ALL CLIENTS</div>
-        <input type="text" class="admin-search" placeholder="Search clients..." oninput="filterClients(this.value)">
+
+    <div id="tab-clients">
+      <div class="admin-stats">
+        <div class="admin-stat"><div class="admin-stat-num" id="stat-total">0</div><div class="admin-stat-label">Total Clients</div></div>
+        <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div><div class="admin-stat-label">Active</div></div>
+        <div class="admin-stat"><div class="admin-stat-num" id="stat-nfc">0</div><div class="admin-stat-label">NFC Tags Generated</div></div>
+        <div class="admin-stat"><div class="admin-stat-num" style="color:var(--orange);" id="stat-tickets">0</div><div class="admin-stat-label">Open Tickets</div></div>
       </div>
-      <table>
-        <thead><tr><th>Client</th><th>Equipment</th><th>Portal URL</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody id="clients-table-body"></tbody>
-      </table>
+      <div class="admin-table-wrap">
+        <div class="admin-table-header">
+          <div class="admin-table-title">ALL CLIENTS</div>
+          <input type="text" class="admin-search" placeholder="Search clients..." oninput="filterClients(this.value)">
+        </div>
+        <table>
+          <thead><tr><th>Client</th><th>Equipment</th><th>Portal URL</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="clients-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-tickets" class="hidden">
+      <div class="ticket-filters">
+        <button class="filter-btn active" onclick="filterTickets('all')">All</button>
+        <button class="filter-btn" onclick="filterTickets('open')">Open</button>
+        <button class="filter-btn" onclick="filterTickets('closed')">Closed</button>
+      </div>
+      <div class="admin-table-wrap">
+        <div class="admin-table-header">
+          <div class="admin-table-title">ALL TICKETS</div>
+          <input type="text" class="admin-search" placeholder="Search tickets..." oninput="filterTicketSearch(this.value)">
+        </div>
+        <table>
+          <thead><tr><th>Client</th><th>Issue</th><th>Details</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="tickets-table-body"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -353,9 +399,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
     <div class="client-footer-logo">WI<span>FYN</span></div>
     <div class="client-footer-sub">Certified Ubiquiti UniFi Installer · Los Angeles, CA</div>
   </div>
-  <div style="text-align:center;padding:16px 24px 32px;">
-    <button class="btn-secondary" onclick="showAdmin()" style="font-size:11px;padding:8px 16px;">← Back to Admin</button>
-  </div>
 </div>
 
 <div class="modal-overlay hidden" id="nfc-modal">
@@ -383,8 +426,11 @@ const ADMIN_PASSWORD = '3C06_ing';
 let loginAttempts = 0;
 let isAuthenticated = false;
 let clients = [];
+let tickets = [];
 let selectedIssue = '';
 let currentModalUrl = '';
+let currentClient = null;
+let ticketFilter = 'all';
 
 function submitLogin() {
   const input = document.getElementById('login-password').value;
@@ -406,12 +452,26 @@ function submitLogin() {
 
 function showLogin() { hideAll(); document.getElementById('view-login').classList.remove('hidden'); }
 function showLanding() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-landing').classList.remove('hidden'); }
-function showAdmin() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-admin').classList.remove('hidden'); renderClients(clients); updateStats(); }
+function showAdmin() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-admin').classList.remove('hidden'); switchTab('clients'); renderClients(clients); updateStats(); }
 function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
 function hideAll() { ['view-login','view-landing','view-admin','view-add-client','view-client'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
 
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.admin-tab').forEach(function(t) { if(t.textContent.toLowerCase().includes(tab)) t.classList.add('active'); });
+  if (tab === 'clients') {
+    document.getElementById('tab-clients').classList.remove('hidden');
+    document.getElementById('tab-tickets').classList.add('hidden');
+  } else {
+    document.getElementById('tab-clients').classList.add('hidden');
+    document.getElementById('tab-tickets').classList.remove('hidden');
+    renderTickets();
+  }
+}
+
 function showClientPortal(client) {
   hideAll();
+  currentClient = client;
   document.getElementById('view-client').classList.remove('hidden');
   document.getElementById('client-display-name').textContent = client.name.toUpperCase();
   document.getElementById('client-display-location').textContent = '📍 ' + client.location;
@@ -429,7 +489,7 @@ function showClientPortal(client) {
   document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); });
 }
 
-function showClientDemo() { showClientPortal(clients[0] || {name:'Demo Client',location:'Los Angeles, CA',equipment:['UniFi Network','Server Rack']}); }
+function showClientDemo() { showClientPortal(clients[0] || {id:999,name:'Demo Client',location:'Los Angeles, CA',slug:'demo',equipment:['UniFi Network','Server Rack'],status:'active'}); }
 
 function renderClients(list) {
   var tbody = document.getElementById('clients-table-body');
@@ -441,6 +501,74 @@ function renderClients(list) {
     tr.innerHTML = '<td><div class="client-name-cell">' + client.name + '</div><div class="client-location-cell">📍 ' + client.location + '</div></td><td><div class="equipment-tags">' + client.equipment.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('') + '</div></td><td><div class="url-cell">portal.wifyn.com/client/<span>' + client.slug + '</span></div></td><td><span class="status-dot status-active"></span><span style="font-size:12px;color:var(--green);">Active</span></td><td><div class="action-btns"><button class="btn-copy" onclick="copyUrl(\'' + url + '\', this)">Copy URL</button><button class="btn-view" onclick="showNFCModal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">NFC Tag</button><button class="btn-view" onclick="showClientPortal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">Preview</button><button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button></div></td>';
     tbody.appendChild(tr);
   });
+}
+
+function renderTickets() {
+  var tbody = document.getElementById('tickets-table-body');
+  tbody.innerHTML = '';
+  var filtered = tickets.filter(function(t) {
+    if (ticketFilter === 'all') return true;
+    if (ticketFilter === 'open') return t.status !== 'closed';
+    if (ticketFilter === 'closed') return t.status === 'closed';
+    return true;
+  });
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">' + (ticketFilter === 'all' ? 'No tickets yet' : 'No ' + ticketFilter + ' tickets') + '</td></tr>';
+    return;
+  }
+  filtered.forEach(function(ticket) {
+    var client = clients.find(function(c) { return c.id === ticket.clientId; });
+    var clientName = client ? client.name : 'Unknown Client';
+    var tr = document.createElement('tr');
+    var statusBadge = '<span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span>';
+    var actionBtn = ticket.status === 'closed' ? '<button class="btn-view" onclick="reopenTicket(' + ticket.id + ')">Reopen</button>' : '<button class="btn-primary" style="padding:6px 12px;font-size:11px;" onclick="closeTicket(' + ticket.id + ')">Mark Complete</button>';
+    tr.innerHTML = '<td><div class="client-name-cell">' + clientName + '</div></td><td>' + ticket.issue + '</td><td><div class="ticket-details">' + (ticket.details || '<em style="color:var(--muted);">No additional details</em>') + '</div></td><td><div class="ticket-time">' + formatTime(ticket.timestamp) + '</div></td><td>' + statusBadge + '</td><td>' + actionBtn + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function filterTickets(filter) {
+  ticketFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(btn) { btn.classList.remove('active'); });
+  event.target.classList.add('active');
+  renderTickets();
+}
+
+function filterTicketSearch(query) {
+  renderTickets();
+}
+
+function closeTicket(id) {
+  var ticket = tickets.find(function(t) { return t.id === id; });
+  if (ticket) {
+    ticket.status = 'closed';
+    saveTickets();
+    renderTickets();
+    updateStats();
+  }
+}
+
+function reopenTicket(id) {
+  var ticket = tickets.find(function(t) { return t.id === id; });
+  if (ticket) {
+    ticket.status = 'open';
+    saveTickets();
+    renderTickets();
+    updateStats();
+  }
+}
+
+function formatTime(timestamp) {
+  var d = new Date(timestamp);
+  var now = new Date();
+  var diff = now - d;
+  var mins = Math.floor(diff / 60000);
+  var hours = Math.floor(mins / 60);
+  var days = Math.floor(hours / 24);
+  if (mins < 60) return mins + 'm ago';
+  if (hours < 24) return hours + 'h ago';
+  if (days < 7) return days + 'd ago';
+  return d.toLocaleDateString();
 }
 
 function addClient() {
@@ -471,10 +599,19 @@ function addClient() {
 
 function deleteClient(id) { if (confirm('Delete this client?')) { clients = clients.filter(function(c) { return c.id !== id; }); saveClients(); renderClients(clients); updateStats(); } }
 function filterClients(query) { var filtered = clients.filter(function(c) { return c.name.toLowerCase().includes(query.toLowerCase()) || c.location.toLowerCase().includes(query.toLowerCase()); }); renderClients(filtered); }
-function updateStats() { document.getElementById('stat-total').textContent = clients.length; document.getElementById('stat-active').textContent = clients.filter(function(c) { return c.status === 'active'; }).length; document.getElementById('stat-nfc').textContent = clients.length; }
+function updateStats() {
+  document.getElementById('stat-total').textContent = clients.length;
+  document.getElementById('stat-active').textContent = clients.filter(function(c) { return c.status === 'active'; }).length;
+  document.getElementById('stat-nfc').textContent = clients.length;
+  var openTickets = tickets.filter(function(t) { return t.status !== 'closed'; }).length;
+  document.getElementById('stat-tickets').textContent = openTickets;
+  document.getElementById('open-ticket-count').textContent = openTickets;
+}
 function updateSlug() { var name = document.getElementById('input-name').value.trim(); var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'your-client-name'; document.getElementById('slug-preview').textContent = slug; }
 function saveClients() { try { localStorage.setItem('wifyn_clients', JSON.stringify(clients)); } catch(e) {} }
 function loadClients() { try { var saved = localStorage.getItem('wifyn_clients'); if (saved) clients = JSON.parse(saved); } catch(e) {} }
+function saveTickets() { try { localStorage.setItem('wifyn_tickets', JSON.stringify(tickets)); } catch(e) {} }
+function loadTickets() { try { var saved = localStorage.getItem('wifyn_tickets'); if (saved) tickets = JSON.parse(saved); } catch(e) {} }
 
 function showNFCModal(client) { var url = 'portal.wifyn.com/client/' + client.slug; currentModalUrl = url; document.getElementById('modal-client-name').textContent = client.name; document.getElementById('modal-nfc-url').textContent = url; document.getElementById('nfc-modal').classList.remove('hidden'); }
 function closeModal() { document.getElementById('nfc-modal').classList.add('hidden'); document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }
@@ -482,13 +619,29 @@ function copyNFCUrl() { navigator.clipboard.writeText('https://' + currentModalU
 function copyUrl(url, btn) { navigator.clipboard.writeText('https://' + url).catch(function() {}); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = 'Copy URL'; btn.classList.remove('copied'); }, 2000); }
 
 function selectIssue(btn, issue) { document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); }); btn.classList.add('selected'); selectedIssue = issue; }
-function submitIssue() { if (!selectedIssue) { alert('Please select an issue type first'); return; } document.getElementById('issue-form-content').style.display = 'none'; document.getElementById('issue-success').style.display = 'block'; }
+function submitIssue() {
+  if (!selectedIssue) { alert('Please select an issue type first'); return; }
+  var details = document.getElementById('issue-details').value.trim();
+  var ticket = {
+    id: Date.now(),
+    clientId: currentClient.id,
+    issue: selectedIssue,
+    details: details,
+    timestamp: Date.now(),
+    status: 'new'
+  };
+  tickets.unshift(ticket);
+  saveTickets();
+  document.getElementById('issue-form-content').style.display = 'none';
+  document.getElementById('issue-success').style.display = 'block';
+}
 
 function getEqClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
 function getEqTagClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
 function getEqIcon(eq) { if (eq === 'UniFi Network') return '📡'; if (eq === 'UniFi Cameras') return '📷'; return '🖥️'; }
 
 loadClients();
+loadTickets();
 showLogin();
 </script>
 </body>
