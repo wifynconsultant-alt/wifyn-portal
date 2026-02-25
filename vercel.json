@@ -1,0 +1,13 @@
+vercel.json
+{
+  "rewrites": [
+    {
+      "source": "/client/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}
