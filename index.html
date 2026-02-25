@@ -56,7 +56,7 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .login-error.show { display: block; }
 .login-attempts { font-size: 11px; color: var(--muted); margin-top: 12px; }
 
-#view-landing, #view-admin, #view-client, #view-add-client { min-height: 100vh; }
+#view-landing, #view-admin, #view-client, #view-add-client, #view-client-history { min-height: 100vh; }
 #view-landing { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
 .landing-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%); pointer-events: none; }
 .landing-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%); pointer-events: none; }
@@ -127,6 +127,8 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .btn-copy.copied { background: rgba(40,200,64,0.1); border-color: rgba(40,200,64,0.2); color: var(--green); }
 .btn-view { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
 .btn-view:hover { border-color: var(--border-accent); color: var(--accent); }
+.btn-history { background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.15); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+.btn-history:hover { background: rgba(0,229,255,0.12); }
 
 .ticket-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; }
 .ticket-new { background: rgba(255,107,53,0.15); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
@@ -143,8 +145,8 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .form-field { margin-bottom: 20px; }
 .form-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
 .form-label span { color: var(--accent); }
-.form-input, .form-select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--white); outline: none; transition: border-color 0.2s; }
-.form-input:focus, .form-select:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
+.form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--white); outline: none; transition: border-color 0.2s; }
+.form-input:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
 .form-input::placeholder { color: rgba(107,128,150,0.5); }
 .slug-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--muted); margin-top: 8px; }
 .slug-preview span { color: var(--accent); }
@@ -154,6 +156,27 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 .checkbox-item-label { font-size: 14px; font-weight: 500; color: var(--white); }
 .form-actions { display: flex; gap: 12px; margin-top: 32px; }
+
+/* ── CLIENT HISTORY ── */
+.history-main { padding: 40px; max-width: 900px; margin: 0 auto; }
+.history-header { margin-bottom: 32px; }
+.history-client-name { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.02em; color: var(--white); line-height: 1; }
+.history-client-location { font-size: 14px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
+.history-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+.history-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; }
+.history-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+.history-stat-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.history-timeline { display: flex; flex-direction: column; gap: 12px; }
+.history-ticket { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; transition: border-color 0.2s; }
+.history-ticket:hover { border-color: var(--border-accent); }
+.history-ticket-left { display: flex; align-items: flex-start; gap: 16px; flex: 1; }
+.history-ticket-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.history-ticket-issue { font-weight: 600; color: var(--white); font-size: 14px; margin-bottom: 4px; }
+.history-ticket-details { font-size: 12px; color: var(--muted); font-style: italic; }
+.history-ticket-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.history-empty { text-align: center; padding: 60px 40px; color: var(--muted); }
+.history-empty-icon { font-size: 48px; margin-bottom: 16px; }
+.history-empty h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); margin-bottom: 8px; }
 
 #view-client { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
 .client-hero { position: relative; overflow: hidden; padding: 60px 40px 48px; background: var(--bg); border-bottom: 1px solid var(--border); }
@@ -306,7 +329,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
           <input type="text" class="admin-search" placeholder="Search clients..." oninput="filterClients(this.value)">
         </div>
         <table>
-          <thead><tr><th>Client</th><th>Equipment</th><th>NFC URL</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Client</th><th>Equipment</th><th>NFC URL</th><th>Tickets</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="clients-table-body"></tbody>
         </table>
       </div>
@@ -341,7 +364,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   <div class="form-section">
     <span class="tag">— New Client</span>
     <h1>ADD CLIENT</h1>
-    <p>Fill out the details below to add a new client and generate their unique NFC portal URL. Client data will be saved to Google Sheets.</p>
+    <p>Fill out the details below to add a new client and generate their unique NFC portal URL.</p>
     <div class="form-card">
       <div class="form-row">
         <div class="form-field">
@@ -380,6 +403,38 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <button class="btn-secondary" onclick="showAdmin()">Cancel</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- CLIENT HISTORY VIEW -->
+<div id="view-client-history" class="hidden">
+  <nav class="admin-nav">
+    <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
+    <div class="admin-nav-right">
+      <button class="btn-secondary" onclick="showAdmin()" style="padding:8px 16px;font-size:11px;">← Back to Dashboard</button>
+    </div>
+  </nav>
+  <div class="history-main">
+    <div class="history-header">
+      <span class="tag">— Client History</span>
+      <div class="history-client-name" id="history-client-name">CLIENT NAME</div>
+      <div class="history-client-location" id="history-client-location">📍 Location</div>
+      <div class="history-stats">
+        <div class="history-stat">
+          <div class="history-stat-num" id="history-total">0</div>
+          <div class="history-stat-label">Total Tickets</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-num" id="history-open" style="color:var(--orange);">0</div>
+          <div class="history-stat-label">Open</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-num" id="history-resolved" style="color:var(--green);">0</div>
+          <div class="history-stat-label">Resolved</div>
+        </div>
+      </div>
+    </div>
+    <div class="history-timeline" id="history-timeline"></div>
   </div>
 </div>
 
@@ -493,11 +548,8 @@ function fetchClientBySlug(slug) {
   fetch(APPS_SCRIPT_URL + '?action=getClient&slug=' + encodeURIComponent(slug))
     .then(function(res) { return res.json(); })
     .then(function(data) {
-      if (data && data.success && data.client) {
-        hideAll(); showClientPortal(data.client);
-      } else {
-        showLoadingError('No client found for this link.<br>Please contact WiFyn for assistance.');
-      }
+      if (data && data.success && data.client) { hideAll(); showClientPortal(data.client); }
+      else { showLoadingError('No client found for this link.<br>Please contact WiFyn for assistance.'); }
     })
     .catch(function() {
       loadClientsFromStorage();
@@ -522,10 +574,8 @@ function refreshFromSheets() {
     fetch(APPS_SCRIPT_URL + '?action=getTickets').then(function(r) { return r.json(); })
   ])
   .then(function(results) {
-    var clientData = results[0];
-    var ticketData = results[1];
-    if (clientData && clientData.success) { clients = clientData.clients; saveClientsToStorage(); }
-    if (ticketData && ticketData.success) { tickets = ticketData.tickets; saveTicketsToStorage(); }
+    if (results[0] && results[0].success) { clients = results[0].clients; saveClientsToStorage(); }
+    if (results[1] && results[1].success) { tickets = results[1].tickets; saveTicketsToStorage(); }
     renderClients(clients);
     updateStats();
     badge.className = 'sync-badge';
@@ -540,27 +590,13 @@ function refreshFromSheets() {
 }
 
 function saveClientToSheets(client) {
-  return fetch(APPS_SCRIPT_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'addClient', slug: client.slug, name: client.name, location: client.location, contact: client.contact, phone: client.phone, equipment: client.equipment.join(', '), status: client.status })
-  });
+  return fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'addClient', slug: client.slug, name: client.name, location: client.location, contact: client.contact, phone: client.phone, equipment: client.equipment.join(', '), status: client.status }) });
 }
-
 function submitTicketToSheets(clientName, location, issueType, details) {
-  return fetch(APPS_SCRIPT_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'addTicket', clientName: clientName, location: location, issueType: issueType, details: details || 'No additional details provided' })
-  });
+  return fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'addTicket', clientName: clientName, location: location, issueType: issueType, details: details || 'No additional details provided' }) });
 }
-
 function updateTicketInSheets(rowIndex, status) {
-  return fetch(APPS_SCRIPT_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'updateTicket', rowIndex: rowIndex, status: status })
-  });
+  return fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'updateTicket', rowIndex: rowIndex, status: status }) });
 }
 
 function submitLogin() {
@@ -592,7 +628,52 @@ function showAdmin() {
   refreshFromSheets();
 }
 function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
-function hideAll() { ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
+function hideAll() { ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client','view-client-history'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
+
+function showClientHistory(client) {
+  hideAll();
+  document.getElementById('view-client-history').classList.remove('hidden');
+  document.getElementById('history-client-name').textContent = client.name.toUpperCase();
+  document.getElementById('history-client-location').textContent = '📍 ' + client.location;
+
+  var clientTickets = tickets.filter(function(t) {
+    return (t.clientName || '').toLowerCase() === client.name.toLowerCase();
+  });
+
+  var open = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
+  var resolved = clientTickets.filter(function(t) { return t.status === 'closed'; }).length;
+
+  document.getElementById('history-total').textContent = clientTickets.length;
+  document.getElementById('history-open').textContent = open;
+  document.getElementById('history-resolved').textContent = resolved;
+
+  var timeline = document.getElementById('history-timeline');
+  timeline.innerHTML = '';
+
+  if (clientTickets.length === 0) {
+    timeline.innerHTML = '<div class="history-empty"><div class="history-empty-icon">🎉</div><h3>No Issues Yet</h3><p style="color:var(--muted);font-size:13px;">This client has never submitted a support ticket.</p></div>';
+    return;
+  }
+
+  clientTickets.forEach(function(ticket) {
+    var icon = ticket.issue === 'Wi-Fi Down' ? '📶' : ticket.issue === 'Internet Down' ? '🌐' : '🛠️';
+    var div = document.createElement('div');
+    div.className = 'history-ticket';
+    div.innerHTML =
+      '<div class="history-ticket-left">' +
+        '<div class="history-ticket-icon">' + icon + '</div>' +
+        '<div>' +
+          '<div class="history-ticket-issue">' + escHtml(ticket.issue) + '</div>' +
+          '<div class="history-ticket-details">' + (ticket.details ? escHtml(ticket.details) : 'No additional details') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">' +
+        '<span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span>' +
+        '<div class="history-ticket-time">' + formatTime(ticket.timestamp) + '</div>' +
+      '</div>';
+    timeline.appendChild(div);
+  });
+}
 
 function switchTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -635,19 +716,26 @@ function showClientDemo() {
 function renderClients(list) {
   var tbody = document.getElementById('clients-table-body');
   tbody.innerHTML = '';
-  if (!list || list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>'; return; }
+  if (!list || list.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>'; return; }
   list.forEach(function(client) {
     var nfcUrl = PORTAL_BASE_URL + '?client=' + client.slug;
     var eqArray = Array.isArray(client.equipment) ? client.equipment : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
+    var clientTickets = tickets.filter(function(t) { return (t.clientName || '').toLowerCase() === client.name.toLowerCase(); });
+    var openCount = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
+    var ticketSummary = clientTickets.length === 0
+      ? '<span style="color:var(--muted);font-size:12px;">None</span>'
+      : '<span style="font-weight:600;color:' + (openCount > 0 ? 'var(--orange)' : 'var(--green)') + ';">' + clientTickets.length + ' total</span><span style="color:var(--muted);font-size:11px;margin-left:6px;">(' + openCount + ' open)</span>';
     var tr = document.createElement('tr');
     var eqTags = eqArray.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('');
     tr.innerHTML =
       '<td><div class="client-name-cell">' + escHtml(client.name) + '</div><div class="client-location-cell">📍 ' + escHtml(client.location) + '</div></td>' +
       '<td><div class="equipment-tags">' + eqTags + '</div></td>' +
       '<td><div class="url-cell" style="font-size:10px;">portal.wifyn.com<span>?client=' + escHtml(client.slug) + '</span></div></td>' +
+      '<td>' + ticketSummary + '</td>' +
       '<td><span class="status-dot status-active"></span><span style="font-size:12px;color:var(--green);">Active</span></td>' +
       '<td><div class="action-btns">' +
-        '<button class="btn-copy" onclick="copyNFCUrlDirect(\'' + nfcUrl + '\', this)">Copy NFC URL</button>' +
+        '<button class="btn-copy" onclick="copyNFCUrlDirect(\'' + nfcUrl + '\', this)">Copy URL</button>' +
+        '<button class="btn-history" onclick="showClientHistory(' + escAttr(client) + ')">History</button>' +
         '<button class="btn-view" onclick="showNFCModal_client(' + escAttr(client) + ')">NFC Tag</button>' +
         '<button class="btn-view" onclick="showClientPortal(' + escAttr(client) + ')">Preview</button>' +
         '<button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button>' +
@@ -736,9 +824,7 @@ function addClient() {
   var newClient = { id: Date.now(), name: name, location: location, contact: contact, phone: phone, slug: slug, equipment: equipment, status: 'active' };
   var btn = document.getElementById('add-client-btn');
   btn.textContent = 'Saving...'; btn.disabled = true;
-  saveClientToSheets(newClient)
-    .then(function() { showToast('✅ Client saved to Google Sheets!'); })
-    .catch(function() { showToast('⚠️ Check your sheet manually', 'error'); });
+  saveClientToSheets(newClient).then(function() { showToast('✅ Client saved to Google Sheets!'); }).catch(function() { showToast('⚠️ Check your sheet manually', 'error'); });
   clients.unshift(newClient);
   saveClientsToStorage();
   ['input-name','input-location','input-contact','input-phone'].forEach(function(id){document.getElementById(id).value='';});
