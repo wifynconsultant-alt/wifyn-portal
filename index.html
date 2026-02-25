@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WiFyn Client Portal System</title>
+<title>WiFyn Client Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,137 +11,28 @@
   --bg: #080c10;
   --panel: #111820;
   --accent: #00e5ff;
-  --orange: #ff6b35;
   --green: #28c840;
   --muted: #6b8096;
   --white: #f0f4f8;
   --border: rgba(255,255,255,0.07);
-  --border-accent: rgba(0,229,255,0.2);
 }
-body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 .hidden { display: none !important; }
-.tag { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
-.btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; text-decoration: none; }
-.btn-primary:hover { background: #00cef5; box-shadow: 0 0 30px rgba(0,229,255,0.4); transform: translateY(-2px); }
-.btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--white); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.25s; text-decoration: none; }
-.btn-secondary:hover { border-color: var(--border-accent); color: var(--accent); }
-.btn-danger { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,59,48,0.1); color: #ff3b30; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,59,48,0.2); cursor: pointer; transition: all 0.25s; }
-.btn-danger:hover { background: rgba(255,59,48,0.2); }
 
-#view-login { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
-.login-card { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 400px; position: relative; z-index: 2; text-align: center; }
-.login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 4px; }
-.login-logo span { color: var(--accent); }
-.login-subtitle { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: block; }
-.login-icon { font-size: 40px; margin-bottom: 16px; }
-.login-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
-.login-desc { font-size: 13px; font-weight: 300; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
-.login-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--white); outline: none; text-align: center; letter-spacing: 0.1em; transition: border-color 0.2s; margin-bottom: 16px; }
-.login-input:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
-.login-input::placeholder { color: rgba(107,128,150,0.4); letter-spacing: 0.05em; }
-.login-btn { width: 100%; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; }
-.login-btn:hover { background: #00cef5; box-shadow: 0 0 24px rgba(0,229,255,0.4); }
-.login-error { font-size: 12px; color: #ff3b30; margin-top: 12px; display: none; }
-.login-error.show { display: block; }
-.login-attempts { font-size: 11px; color: var(--muted); margin-top: 12px; }
+/* Loading */
+#loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+.spinner { width: 50px; height: 50px; border: 3px solid rgba(0,229,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: var(--muted); font-size: 14px; }
 
-#view-landing, #view-admin, #view-client, #view-add-client { min-height: 100vh; }
-#view-landing { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
-.landing-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%); pointer-events: none; }
-.landing-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%); pointer-events: none; }
-.landing-logo { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 8px; position: relative; z-index: 1; }
-.landing-logo span { color: var(--accent); }
-.landing-sub { font-size: 13px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 60px; position: relative; z-index: 1; }
-.landing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; width: 100%; position: relative; z-index: 1; }
-.landing-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 36px 32px; cursor: pointer; transition: all 0.3s; text-align: center; }
-.landing-card:hover { border-color: var(--border-accent); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.landing-card-icon { font-size: 40px; margin-bottom: 16px; display: block; }
-.landing-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 8px; }
-.landing-card-desc { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+/* Error */
+#error { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px; }
+.error-card { background: var(--panel); border: 1px solid rgba(255,59,48,0.3); border-radius: 20px; padding: 48px 40px; max-width: 500px; text-align: center; }
+.error-icon { font-size: 64px; margin-bottom: 20px; }
+.error-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #ff3b30; margin-bottom: 12px; }
+.error-msg { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-.admin-nav { background: rgba(8,12,16,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.admin-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; }
-.admin-logo span { color: var(--accent); }
-.admin-nav-right { display: flex; gap: 12px; align-items: center; }
-.admin-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 4px 12px; border-radius: 100px; }
-
-.admin-main { padding: 40px; max-width: 1400px; margin: 0 auto; }
-.admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
-.admin-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; color: var(--white); }
-
-.admin-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
-.admin-tab { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 24px; background: transparent; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; position: relative; top: 1px; }
-.admin-tab:hover { color: var(--white); }
-.admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.ticket-count { background: var(--orange); color: white; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: 6px; }
-
-.admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
-.admin-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
-.admin-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--accent); line-height: 1; margin-bottom: 4px; }
-.admin-stat-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-
-.ticket-filters { display: flex; gap: 12px; margin-bottom: 20px; }
-.filter-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
-.filter-btn:hover { border-color: var(--border-accent); }
-.filter-btn.active { background: rgba(0,229,255,0.1); border-color: var(--accent); color: var(--accent); }
-
-.admin-table-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-.admin-table-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.admin-table-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; }
-.admin-search { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--white); outline: none; width: 240px; transition: border-color 0.2s; }
-.admin-search:focus { border-color: var(--border-accent); }
-.admin-search::placeholder { color: var(--muted); }
-table { width: 100%; border-collapse: collapse; }
-th { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 12px 24px; text-align: left; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
-td { padding: 16px 24px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255,255,255,0.02); }
-.client-name-cell { font-weight: 600; color: var(--white); }
-.client-location-cell { color: var(--muted); font-size: 12px; }
-.equipment-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.eq-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
-.eq-network { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
-.eq-cameras { background: rgba(255,107,53,0.1); color: var(--orange); border: 1px solid rgba(255,107,53,0.2); }
-.eq-rack { background: rgba(107,128,150,0.1); color: #8ba0b4; border: 1px solid rgba(107,128,150,0.2); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-.status-active { background: var(--green); box-shadow: 0 0 8px var(--green); }
-.url-cell { font-family: 'Courier New', monospace; font-size: 11px; color: var(--muted); }
-.url-cell span { color: var(--accent); }
-.action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn-copy { background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.15); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
-.btn-copy:hover { background: rgba(0,229,255,0.15); }
-.btn-copy.copied { background: rgba(40,200,64,0.1); border-color: rgba(40,200,64,0.2); color: var(--green); }
-.btn-view { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--white); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
-.btn-view:hover { border-color: var(--border-accent); color: var(--accent); }
-
-.ticket-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; display: inline-block; }
-.ticket-new { background: rgba(255,107,53,0.15); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
-.ticket-open { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
-.ticket-closed { background: rgba(107,128,150,0.1); color: var(--muted); border: 1px solid rgba(107,128,150,0.2); }
-.ticket-details { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; max-width: 300px; }
-.ticket-time { font-size: 11px; color: var(--muted); }
-
-.form-section { max-width: 800px; margin: 0 auto; padding: 40px; }
-.form-section h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; margin-bottom: 8px; }
-.form-section p { font-size: 14px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
-.form-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.form-field { margin-bottom: 20px; }
-.form-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
-.form-label span { color: var(--accent); }
-.form-input, .form-select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--white); outline: none; transition: border-color 0.2s; }
-.form-input:focus, .form-select:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.06); }
-.form-input::placeholder { color: rgba(107,128,150,0.5); }
-.slug-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--muted); margin-top: 8px; }
-.slug-preview span { color: var(--accent); }
-.checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-.checkbox-item { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
-.checkbox-item:hover { border-color: var(--border-accent); }
-.checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
-.checkbox-item-label { font-size: 14px; font-weight: 500; color: var(--white); }
-.form-actions { display: flex; gap: 12px; margin-top: 32px; }
-
-#view-client { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+/* Client Portal */
 .client-hero { position: relative; overflow: hidden; padding: 60px 40px 48px; background: var(--bg); border-bottom: 1px solid var(--border); }
 .client-hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); pointer-events: none; }
 .client-hero-inner { position: relative; z-index: 2; max-width: 600px; margin: 0 auto; text-align: center; }
@@ -153,7 +44,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-status { display: inline-flex; align-items: center; gap: 8px; background: rgba(40,200,64,0.1); border: 1px solid rgba(40,200,64,0.2); border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 600; color: var(--green); }
 .client-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 2s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
 .client-body { padding: 32px 24px; max-width: 600px; margin: 0 auto; width: 100%; flex: 1; }
+.tag { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
 .client-contact-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
 .client-contact-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 16px; border-radius: 16px; text-decoration: none; transition: all 0.25s; border: 1px solid; }
 .client-contact-btn-icon { font-size: 28px; }
@@ -162,18 +55,20 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-btn-call { background: rgba(0,229,255,0.08); border-color: rgba(0,229,255,0.2); color: var(--accent); }
 .client-btn-call:hover { background: rgba(0,229,255,0.15); transform: translateY(-2px); }
 .client-btn-email { background: rgba(255,255,255,0.04); border-color: var(--border); color: var(--white); }
-.client-btn-email:hover { border-color: var(--border-accent); color: var(--accent); transform: translateY(-2px); }
+.client-btn-email:hover { border-color: rgba(0,229,255,0.2); color: var(--accent); transform: translateY(-2px); }
+
 .client-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 12px; }
 .client-equipment { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-.client-eq-badge { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; }
+.client-eq-badge { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 500; background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+
 .client-issue-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 28px; }
 .client-issue-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 16px; }
 .issue-btns { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
 .issue-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; color: var(--white); text-align: left; }
-.issue-btn:hover, .issue-btn.selected { border-color: var(--border-accent); background: rgba(0,229,255,0.05); color: var(--accent); }
+.issue-btn:hover, .issue-btn.selected { border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.05); color: var(--accent); }
 .issue-btn-icon { font-size: 20px; flex-shrink: 0; }
 .issue-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--white); outline: none; resize: vertical; min-height: 100px; margin-bottom: 16px; transition: border-color 0.2s; }
-.issue-textarea:focus { border-color: var(--border-accent); }
+.issue-textarea:focus { border-color: rgba(0,229,255,0.2); }
 .issue-textarea::placeholder { color: rgba(107,128,150,0.4); }
 .issue-submit { width: 100%; background: var(--accent); color: var(--bg); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; }
 .issue-submit:hover { background: #00cef5; box-shadow: 0 0 24px rgba(0,229,255,0.4); }
@@ -181,188 +76,42 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .issue-success-icon { font-size: 48px; margin-bottom: 12px; }
 .issue-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); margin-bottom: 8px; }
 .issue-success p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
 .client-footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); }
 .client-footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; color: var(--muted); }
 .client-footer-logo span { color: var(--accent); }
 .client-footer-sub { font-size: 11px; color: rgba(107,128,150,0.5); margin-top: 4px; }
-
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.modal { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 480px; width: 100%; position: relative; }
-.modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 4px; }
-.modal-close:hover { color: var(--white); }
-.modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; margin-bottom: 8px; }
-.modal p { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-.nfc-tag-preview { background: var(--bg); border: 2px solid var(--border-accent); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
-.nfc-tag-preview::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 70%); }
-.nfc-tag-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; color: var(--white); margin-bottom: 4px; position: relative; }
-.nfc-tag-logo span { color: var(--accent); }
-.nfc-tag-client { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 16px; position: relative; }
-.nfc-tag-icon { font-size: 40px; margin-bottom: 12px; position: relative; }
-.nfc-tag-scan { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); position: relative; }
-.nfc-tag-url { font-family: 'Courier New', monospace; font-size: 10px; color: var(--muted); margin-top: 8px; position: relative; }
-.modal-actions { display: flex; gap: 12px; }
 </style>
 </head>
 <body>
 
-<div id="view-login">
-  <div class="landing-grid"></div>
-  <div class="landing-glow"></div>
-  <div class="login-card">
-    <div class="login-logo">WI<span>FYN</span></div>
-    <span class="login-subtitle">Client Portal System</span>
-    <div class="login-icon">🔒</div>
-    <div class="login-title">ADMIN ACCESS</div>
-    <div class="login-desc">Enter your password to access the admin panel.</div>
-    <input type="password" class="login-input" id="login-password" placeholder="Enter password" onkeydown="if(event.key==='Enter') submitLogin()">
-    <button class="login-btn" onclick="submitLogin()">→ Access Admin Panel</button>
-    <div class="login-error" id="login-error">❌ Incorrect password. Please try again.</div>
-    <div class="login-attempts" id="login-attempts"></div>
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading client portal...</div>
+</div>
+
+<div id="error" class="hidden">
+  <div class="error-card">
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">CLIENT NOT FOUND</div>
+    <div class="error-msg" id="error-message">The client portal URL you're trying to access doesn't exist. Please check the link and try again.</div>
   </div>
 </div>
 
-<div id="view-landing" class="hidden">
-  <div class="landing-grid"></div>
-  <div class="landing-glow"></div>
-  <div class="landing-logo">WI<span>FYN</span></div>
-  <div class="landing-sub">Client Portal System</div>
-  <div class="landing-cards">
-    <div class="landing-card" onclick="showAdmin()">
-      <span class="landing-card-icon">⚙️</span>
-      <div class="landing-card-title">Admin Panel</div>
-      <div class="landing-card-desc">Manage clients, generate NFC URLs, view all accounts</div>
-    </div>
-    <div class="landing-card" onclick="showClientDemo()">
-      <span class="landing-card-icon">📱</span>
-      <div class="landing-card-title">Client Portal</div>
-      <div class="landing-card-desc">Preview what clients see when they scan the NFC tag</div>
-    </div>
-  </div>
-</div>
-
-<div id="view-admin" class="hidden">
-  <nav class="admin-nav">
-    <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
-    <div class="admin-nav-right">
-      <span class="admin-badge">🔒 Admin Access</span>
-      <button class="btn-secondary" onclick="showLanding()" style="padding:8px 16px;font-size:11px;">← Back</button>
-    </div>
-  </nav>
-  <div class="admin-main">
-    <div class="admin-header">
-      <h1>DASHBOARD</h1>
-      <button class="btn-primary" onclick="showAddClient()">+ Add New Client</button>
-    </div>
-
-    <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchTab('clients')">Clients</button>
-      <button class="admin-tab" onclick="switchTab('tickets')">Tickets <span class="ticket-count" id="open-ticket-count">0</span></button>
-    </div>
-
-    <div id="tab-clients">
-      <div class="admin-stats">
-        <div class="admin-stat"><div class="admin-stat-num" id="stat-total">0</div><div class="admin-stat-label">Total Clients</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div><div class="admin-stat-label">Active</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" id="stat-nfc">0</div><div class="admin-stat-label">NFC Tags Generated</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" style="color:var(--orange);" id="stat-tickets">0</div><div class="admin-stat-label">Open Tickets</div></div>
-      </div>
-      <div class="admin-table-wrap">
-        <div class="admin-table-header">
-          <div class="admin-table-title">ALL CLIENTS</div>
-          <input type="text" class="admin-search" placeholder="Search clients..." oninput="filterClients(this.value)">
-        </div>
-        <table>
-          <thead><tr><th>Client</th><th>Equipment</th><th>Portal URL</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="clients-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div id="tab-tickets" class="hidden">
-      <div class="ticket-filters">
-        <button class="filter-btn active" onclick="filterTickets('all')">All</button>
-        <button class="filter-btn" onclick="filterTickets('open')">Open</button>
-        <button class="filter-btn" onclick="filterTickets('closed')">Closed</button>
-      </div>
-      <div class="admin-table-wrap">
-        <div class="admin-table-header">
-          <div class="admin-table-title">ALL TICKETS</div>
-          <input type="text" class="admin-search" placeholder="Search tickets..." oninput="filterTicketSearch(this.value)">
-        </div>
-        <table>
-          <thead><tr><th>Client</th><th>Issue</th><th>Details</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="tickets-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="view-add-client" class="hidden">
-  <nav class="admin-nav">
-    <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
-    <div class="admin-nav-right">
-      <button class="btn-secondary" onclick="showAdmin()" style="padding:8px 16px;font-size:11px;">← Back to Dashboard</button>
-    </div>
-  </nav>
-  <div class="form-section">
-    <span class="tag">— New Client</span>
-    <h1>ADD CLIENT</h1>
-    <p>Fill out the details below to add a new client and generate their unique NFC portal URL.</p>
-    <div class="form-card">
-      <div class="form-row">
-        <div class="form-field">
-          <label class="form-label">Business Name <span>*</span></label>
-          <input type="text" class="form-input" id="input-name" placeholder="e.g. Nobu Malibu" oninput="updateSlug()">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Location <span>*</span></label>
-          <input type="text" class="form-input" id="input-location" placeholder="e.g. Malibu, CA">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label class="form-label">Contact Name</label>
-          <input type="text" class="form-input" id="input-contact" placeholder="e.g. John Smith">
-        </div>
-        <div class="form-field">
-          <label class="form-label">Contact Phone</label>
-          <input type="text" class="form-input" id="input-phone" placeholder="e.g. (310) 555-0000">
-        </div>
-      </div>
-      <div class="form-field">
-        <label class="form-label">Auto-Generated Portal URL</label>
-        <div class="slug-preview">portal.wifyn.com/client/<span id="slug-preview">your-client-name</span></div>
-      </div>
-      <div class="form-field">
-        <label class="form-label">Equipment Installed</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item"><input type="checkbox" id="eq-network" value="UniFi Network"><span class="checkbox-item-label">📡 UniFi Network</span></label>
-          <label class="checkbox-item"><input type="checkbox" id="eq-cameras" value="UniFi Cameras"><span class="checkbox-item-label">📷 UniFi Cameras</span></label>
-          <label class="checkbox-item"><input type="checkbox" id="eq-rack" value="Server Rack"><span class="checkbox-item-label">🖥️ Server Rack</span></label>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn-primary" onclick="addClient()">Generate NFC URL & Add Client</button>
-        <button class="btn-secondary" onclick="showAdmin()">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="view-client" class="hidden">
+<div id="client-portal" class="hidden">
   <div class="client-hero">
     <div class="client-hero-grid"></div>
     <div class="client-hero-inner">
       <div class="client-wifi-icon">📡</div>
       <div class="client-greeting">WiFyn Network Support</div>
-      <div class="client-name" id="client-display-name">CLIENT NAME</div>
-      <div class="client-location" id="client-display-location">📍 Location</div>
+      <div class="client-name" id="client-name">CLIENT NAME</div>
+      <div class="client-location" id="client-location">📍 Location</div>
       <div class="client-status"><span class="client-status-dot"></span>System Online</div>
     </div>
   </div>
+  
   <div class="client-body">
-    <div style="margin-bottom:8px;"><span class="tag">— Need Help?</span></div>
+    <div class="tag">— Need Help?</div>
     <div class="client-contact-btns">
       <a href="tel:+18183909252" class="client-contact-btn client-btn-call">
         <span class="client-contact-btn-icon">📞</span>
@@ -375,11 +124,13 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <span class="client-contact-btn-value">wifynconsultant@gmail.com</span>
       </a>
     </div>
+    
     <div class="client-section-title">YOUR EQUIPMENT</div>
-    <div class="client-equipment" id="client-equipment-list"></div>
+    <div class="client-equipment" id="equipment-list"></div>
+    
     <div class="client-issue-card">
       <div class="client-issue-title">REPORT AN ISSUE</div>
-      <div id="issue-form-content">
+      <div id="issue-form">
         <div class="issue-btns">
           <button class="issue-btn" onclick="selectIssue(this, 'Wi-Fi Down')"><span class="issue-btn-icon">📶</span> Wi-Fi Down</button>
           <button class="issue-btn" onclick="selectIssue(this, 'Internet Down')"><span class="issue-btn-icon">🌐</span> Internet Down</button>
@@ -395,267 +146,132 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       </div>
     </div>
   </div>
+  
   <div class="client-footer">
     <div class="client-footer-logo">WI<span>FYN</span></div>
     <div class="client-footer-sub">Certified Ubiquiti UniFi Installer · Los Angeles, CA</div>
   </div>
 </div>
 
-<div class="modal-overlay hidden" id="nfc-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <span class="tag">— NFC Tag</span>
-    <h2>NFC TAG PREVIEW</h2>
-    <p>Program this URL to your NFC tag using the NFC Tools app. Stick the tag inside the server rack door.</p>
-    <div class="nfc-tag-preview">
-      <div class="nfc-tag-logo">WI<span>FYN</span></div>
-      <div class="nfc-tag-client" id="modal-client-name">Client Name</div>
-      <div class="nfc-tag-icon">📲</div>
-      <div class="nfc-tag-scan">TAP TO REPORT AN ISSUE</div>
-      <div class="nfc-tag-url" id="modal-nfc-url">portal.wifyn.com/client/...</div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-primary" onclick="copyNFCUrl()" id="modal-copy-btn">Copy NFC URL</button>
-      <button class="btn-secondary" onclick="closeModal()">Close</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const ADMIN_PASSWORD = '3C06_ing';
-let loginAttempts = 0;
-let isAuthenticated = false;
-let clients = [];
-let tickets = [];
-let selectedIssue = '';
-let currentModalUrl = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycby6v53TGufAk-MCvTFAIOEY6f0rsb_ZqDn6JKVQnanaOxLLvqLS3-C3ZFvWAIE_UW0I/exec';
 let currentClient = null;
-let ticketFilter = 'all';
+let selectedIssue = '';
 
-function submitLogin() {
-  const input = document.getElementById('login-password').value;
-  const error = document.getElementById('login-error');
-  const attempts = document.getElementById('login-attempts');
-  if (input === ADMIN_PASSWORD) {
-    isAuthenticated = true;
-    loginAttempts = 0;
-    error.classList.remove('show');
-    document.getElementById('login-password').value = '';
-    showLanding();
-  } else {
-    loginAttempts++;
-    error.classList.add('show');
-    document.getElementById('login-password').value = '';
-    if (loginAttempts >= 3) attempts.textContent = loginAttempts + ' failed attempts';
-  }
+// Get slug from URL
+function getClientSlug() {
+  const path = window.location.pathname;
+  const match = path.match(/\/client\/([^\/]+)/);
+  return match ? match[1] : null;
 }
 
-function showLogin() { hideAll(); document.getElementById('view-login').classList.remove('hidden'); }
-function showLanding() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-landing').classList.remove('hidden'); }
-function showAdmin() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-admin').classList.remove('hidden'); switchTab('clients'); renderClients(clients); updateStats(); }
-function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
-function hideAll() { ['view-login','view-landing','view-admin','view-add-client','view-client'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
-
-function switchTab(tab) {
-  document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.admin-tab').forEach(function(t) { if(t.textContent.toLowerCase().includes(tab)) t.classList.add('active'); });
-  if (tab === 'clients') {
-    document.getElementById('tab-clients').classList.remove('hidden');
-    document.getElementById('tab-tickets').classList.add('hidden');
-  } else {
-    document.getElementById('tab-clients').classList.add('hidden');
-    document.getElementById('tab-tickets').classList.remove('hidden');
-    renderTickets();
-  }
-}
-
-function showClientPortal(client) {
-  hideAll();
-  currentClient = client;
-  document.getElementById('view-client').classList.remove('hidden');
-  document.getElementById('client-display-name').textContent = client.name.toUpperCase();
-  document.getElementById('client-display-location').textContent = '📍 ' + client.location;
-  var eqList = document.getElementById('client-equipment-list');
-  eqList.innerHTML = '';
-  client.equipment.forEach(function(eq) {
-    var badge = document.createElement('div');
-    badge.className = 'client-eq-badge ' + getEqClass(eq);
-    badge.innerHTML = getEqIcon(eq) + ' ' + eq;
-    eqList.appendChild(badge);
-  });
-  document.getElementById('issue-form-content').style.display = 'block';
-  document.getElementById('issue-success').style.display = 'none';
-  selectedIssue = '';
-  document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); });
-}
-
-function showClientDemo() { showClientPortal(clients[0] || {id:999,name:'Demo Client',location:'Los Angeles, CA',slug:'demo',equipment:['UniFi Network','Server Rack'],status:'active'}); }
-
-function renderClients(list) {
-  var tbody = document.getElementById('clients-table-body');
-  tbody.innerHTML = '';
-  if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>'; return; }
-  list.forEach(function(client) {
-    var url = 'portal.wifyn.com/client/' + client.slug;
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td><div class="client-name-cell">' + client.name + '</div><div class="client-location-cell">📍 ' + client.location + '</div></td><td><div class="equipment-tags">' + client.equipment.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('') + '</div></td><td><div class="url-cell">portal.wifyn.com/client/<span>' + client.slug + '</span></div></td><td><span class="status-dot status-active"></span><span style="font-size:12px;color:var(--green);">Active</span></td><td><div class="action-btns"><button class="btn-copy" onclick="copyUrl(\'' + url + '\', this)">Copy URL</button><button class="btn-view" onclick="showNFCModal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">NFC Tag</button><button class="btn-view" onclick="showClientPortal(' + JSON.stringify(client).replace(/"/g, '&quot;') + ')">Preview</button><button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button></div></td>';
-    tbody.appendChild(tr);
-  });
-}
-
-function renderTickets() {
-  var tbody = document.getElementById('tickets-table-body');
-  tbody.innerHTML = '';
-  var filtered = tickets.filter(function(t) {
-    if (ticketFilter === 'all') return true;
-    if (ticketFilter === 'open') return t.status !== 'closed';
-    if (ticketFilter === 'closed') return t.status === 'closed';
-    return true;
-  });
-  if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">' + (ticketFilter === 'all' ? 'No tickets yet' : 'No ' + ticketFilter + ' tickets') + '</td></tr>';
+// Load client data
+async function loadClient() {
+  const slug = getClientSlug();
+  
+  if (!slug) {
+    showError('Invalid URL', 'This doesn\'t appear to be a valid client portal URL.');
     return;
   }
-  filtered.forEach(function(ticket) {
-    var client = clients.find(function(c) { return c.id === ticket.clientId; });
-    var clientName = client ? client.name : 'Unknown Client';
-    var tr = document.createElement('tr');
-    var statusBadge = '<span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span>';
-    var actionBtn = ticket.status === 'closed' ? '<button class="btn-view" onclick="reopenTicket(' + ticket.id + ')">Reopen</button>' : '<button class="btn-primary" style="padding:6px 12px;font-size:11px;" onclick="closeTicket(' + ticket.id + ')">Mark Complete</button>';
-    tr.innerHTML = '<td><div class="client-name-cell">' + clientName + '</div></td><td>' + ticket.issue + '</td><td><div class="ticket-details">' + (ticket.details || '<em style="color:var(--muted);">No additional details</em>') + '</div></td><td><div class="ticket-time">' + formatTime(ticket.timestamp) + '</div></td><td>' + statusBadge + '</td><td>' + actionBtn + '</td>';
-    tbody.appendChild(tr);
-  });
-}
-
-function filterTickets(filter) {
-  ticketFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(function(btn) { btn.classList.remove('active'); });
-  event.target.classList.add('active');
-  renderTickets();
-}
-
-function filterTicketSearch(query) {
-  renderTickets();
-}
-
-function closeTicket(id) {
-  var ticket = tickets.find(function(t) { return t.id === id; });
-  if (ticket) {
-    ticket.status = 'closed';
-    saveTickets();
-    renderTickets();
-    updateStats();
+  
+  try {
+    const response = await fetch(API_URL + '?slug=' + slug);
+    const data = await response.json();
+    
+    if (!data.success) {
+      showError('Client Not Found', data.error || 'The client portal you\'re looking for doesn\'t exist.');
+      return;
+    }
+    
+    currentClient = data.client;
+    renderClient();
+    
+  } catch (error) {
+    showError('Connection Error', 'Unable to load client data. Please check your internet connection and try again.');
+    console.error('Load error:', error);
   }
 }
 
-function reopenTicket(id) {
-  var ticket = tickets.find(function(t) { return t.id === id; });
-  if (ticket) {
-    ticket.status = 'open';
-    saveTickets();
-    renderTickets();
-    updateStats();
+// Show error
+function showError(title, message) {
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('error').classList.remove('hidden');
+  document.querySelector('.error-title').textContent = title.toUpperCase();
+  document.getElementById('error-message').textContent = message;
+}
+
+// Render client portal
+function renderClient() {
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('client-portal').classList.remove('hidden');
+  
+  document.getElementById('client-name').textContent = currentClient.name.toUpperCase();
+  document.getElementById('client-location').textContent = '📍 ' + currentClient.location;
+  
+  // Render equipment
+  const eqList = document.getElementById('equipment-list');
+  eqList.innerHTML = '';
+  if (currentClient.equipment && currentClient.equipment.length > 0) {
+    currentClient.equipment.forEach(function(eq) {
+      const badge = document.createElement('div');
+      badge.className = 'client-eq-badge';
+      badge.textContent = getEqIcon(eq) + ' ' + eq;
+      eqList.appendChild(badge);
+    });
+  } else {
+    eqList.innerHTML = '<div class="client-eq-badge">📡 Network Equipment</div>';
   }
 }
 
-function formatTime(timestamp) {
-  var d = new Date(timestamp);
-  var now = new Date();
-  var diff = now - d;
-  var mins = Math.floor(diff / 60000);
-  var hours = Math.floor(mins / 60);
-  var days = Math.floor(hours / 24);
-  if (mins < 60) return mins + 'm ago';
-  if (hours < 24) return hours + 'h ago';
-  if (days < 7) return days + 'd ago';
-  return d.toLocaleDateString();
+// Equipment icons
+function getEqIcon(eq) {
+  if (eq.includes('Network')) return '📡';
+  if (eq.includes('Camera')) return '📷';
+  if (eq.includes('Rack')) return '🖥️';
+  return '🔧';
 }
 
-function addClient() {
-  var name = document.getElementById('input-name').value.trim();
-  var location = document.getElementById('input-location').value.trim();
-  var contact = document.getElementById('input-contact').value.trim();
-  var phone = document.getElementById('input-phone').value.trim();
-  if (!name || !location) { alert('Please fill in Business Name and Location'); return; }
-  var equipment = [];
-  if (document.getElementById('eq-network').checked) equipment.push('UniFi Network');
-  if (document.getElementById('eq-cameras').checked) equipment.push('UniFi Cameras');
-  if (document.getElementById('eq-rack').checked) equipment.push('Server Rack');
-  var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  var newClient = { id: Date.now(), name: name, location: location, contact: contact, phone: phone, slug: slug, equipment: equipment, status: 'active' };
-  clients.unshift(newClient);
-  saveClients();
-  showAdmin();
-  setTimeout(function() { showNFCModal(newClient); }, 300);
-  document.getElementById('input-name').value = '';
-  document.getElementById('input-location').value = '';
-  document.getElementById('input-contact').value = '';
-  document.getElementById('input-phone').value = '';
-  document.getElementById('eq-network').checked = false;
-  document.getElementById('eq-cameras').checked = false;
-  document.getElementById('eq-rack').checked = false;
-  document.getElementById('slug-preview').textContent = 'your-client-name';
+// Select issue
+function selectIssue(btn, issue) {
+  document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  selectedIssue = issue;
 }
 
-function deleteClient(id) { if (confirm('Delete this client?')) { clients = clients.filter(function(c) { return c.id !== id; }); saveClients(); renderClients(clients); updateStats(); } }
-function filterClients(query) { var filtered = clients.filter(function(c) { return c.name.toLowerCase().includes(query.toLowerCase()) || c.location.toLowerCase().includes(query.toLowerCase()); }); renderClients(filtered); }
-function updateStats() {
-  document.getElementById('stat-total').textContent = clients.length;
-  document.getElementById('stat-active').textContent = clients.filter(function(c) { return c.status === 'active'; }).length;
-  document.getElementById('stat-nfc').textContent = clients.length;
-  var openTickets = tickets.filter(function(t) { return t.status !== 'closed'; }).length;
-  document.getElementById('stat-tickets').textContent = openTickets;
-  document.getElementById('open-ticket-count').textContent = openTickets;
-}
-function updateSlug() { var name = document.getElementById('input-name').value.trim(); var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'your-client-name'; document.getElementById('slug-preview').textContent = slug; }
-function saveClients() { try { localStorage.setItem('wifyn_clients', JSON.stringify(clients)); } catch(e) {} }
-function loadClients() { try { var saved = localStorage.getItem('wifyn_clients'); if (saved) clients = JSON.parse(saved); } catch(e) {} }
-function saveTickets() { try { localStorage.setItem('wifyn_tickets', JSON.stringify(tickets)); } catch(e) {} }
-function loadTickets() { try { var saved = localStorage.getItem('wifyn_tickets'); if (saved) tickets = JSON.parse(saved); } catch(e) {} }
-
-function showNFCModal(client) { var url = 'portal.wifyn.com/client/' + client.slug; currentModalUrl = url; document.getElementById('modal-client-name').textContent = client.name; document.getElementById('modal-nfc-url').textContent = url; document.getElementById('nfc-modal').classList.remove('hidden'); }
-function closeModal() { document.getElementById('nfc-modal').classList.add('hidden'); document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }
-function copyNFCUrl() { navigator.clipboard.writeText('https://' + currentModalUrl).then(function() { document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function() { document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }, 2000); }).catch(function() { document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function() { document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }, 2000); }); }
-function copyUrl(url, btn) { navigator.clipboard.writeText('https://' + url).catch(function() {}); btn.textContent = '✓ Copied!'; btn.classList.add('copied'); setTimeout(function() { btn.textContent = 'Copy URL'; btn.classList.remove('copied'); }, 2000); }
-
-function selectIssue(btn, issue) { document.querySelectorAll('.issue-btn').forEach(function(b) { b.classList.remove('selected'); }); btn.classList.add('selected'); selectedIssue = issue; }
-function submitIssue() {
-  if (!selectedIssue) { alert('Please select an issue type first'); return; }
-  var details = document.getElementById('issue-details').value.trim();
-  var ticket = {
-    id: Date.now(),
-    clientId: currentClient.id,
-    issue: selectedIssue,
-    details: details,
-    timestamp: Date.now(),
-    status: 'new'
-  };
-  tickets.unshift(ticket);
-  saveTickets();
+// Submit issue
+async function submitIssue() {
+  if (!selectedIssue) {
+    alert('Please select an issue type first');
+    return;
+  }
   
-  fetch('https://script.google.com/macros/s/AKfycby6v53TGufAk-MCvTFAIOEY6f0rsb_ZqDn6JKVQnanaOxLLvqLS3-C3ZFvWAIE_UW0I/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      clientName: currentClient.name,
-      location: currentClient.location,
-      issueType: selectedIssue,
-      details: details || 'No additional details provided'
-    })
-  }).catch(function(err) { console.log('Sheet update failed:', err); });
+  const details = document.getElementById('issue-details').value.trim();
   
-  document.getElementById('issue-form-content').style.display = 'none';
-  document.getElementById('issue-success').style.display = 'block';
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        action: 'submitTicket',
+        clientName: currentClient.name,
+        location: currentClient.location,
+        issueType: selectedIssue,
+        details: details || 'No additional details provided'
+      })
+    });
+    
+    document.getElementById('issue-form').style.display = 'none';
+    document.getElementById('issue-success').style.display = 'block';
+    
+  } catch (error) {
+    console.error('Submit error:', error);
+    alert('There was an error submitting your report. Please call us directly at (818) 390-9252');
+  }
 }
 
-function getEqClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
-function getEqTagClass(eq) { if (eq === 'UniFi Network') return 'eq-network'; if (eq === 'UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
-function getEqIcon(eq) { if (eq === 'UniFi Network') return '📡'; if (eq === 'UniFi Cameras') return '📷'; return '🖥️'; }
-
-loadClients();
-loadTickets();
-showLogin();
+// Load client on page load
+loadClient();
 </script>
 </body>
 </html>
