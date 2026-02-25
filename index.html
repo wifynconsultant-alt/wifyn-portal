@@ -359,7 +359,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
           <input type="text" class="form-input" id="input-contact" placeholder="e.g. John Smith">
         </div>
         <div class="form-field">
-          <label class="form-label">Contact Phone</label>
+          class="form-label">Contact Phone</label>
           <input type="text" class="form-input" id="input-phone" placeholder="e.g. (310) 555-0000">
         </div>
       </div>
@@ -484,14 +484,13 @@ window.addEventListener('DOMContentLoaded', function() {
     fetchClientBySlug(clientSlug);
   } else {
     loadClientsFromStorage();
-    loadTickets();
+    loadTicketsFromStorage();
     showLogin();
   }
 });
 
 function fetchClientBySlug(slug) {
-  var url = APPS_SCRIPT_URL + '?action=getClient&slug=' + encodeURIComponent(slug);
-  fetch(url)
+  fetch(APPS_SCRIPT_URL + '?action=getClient&slug=' + encodeURIComponent(slug))
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.success && data.client) {
@@ -501,22 +500,17 @@ function fetchClientBySlug(slug) {
         showLoadingError('No client found for this link.<br>Please contact WiFyn for assistance.');
       }
     })
-    .catch(function(err) {
+    .catch(function() {
       loadClientsFromStorage();
       var found = clients.find(function(c) { return c.slug === slug; });
-      if (found) {
-        hideAll();
-        showClientPortal(found);
-      } else {
-        showLoadingError('Could not connect to the portal. Please check your internet connection or contact WiFyn.');
-      }
+      if (found) { hideAll(); showClientPortal(found); }
+      else { showLoadingError('Could not connect to the portal. Please check your internet connection.'); }
     });
 }
 
 function showLoadingError(msg) {
   document.getElementById('loading-spinner-wrap').classList.add('hidden');
-  var errWrap = document.getElementById('loading-error-wrap');
-  errWrap.classList.remove('hidden');
+  document.getElementById('loading-error-wrap').classList.remove('hidden');
   document.getElementById('loading-error-msg').innerHTML = msg;
 }
 
@@ -524,60 +518,59 @@ function refreshFromSheets() {
   var badge = document.getElementById('sync-badge');
   badge.className = 'sync-badge syncing';
   badge.textContent = '🔄 Syncing...';
-  fetch(APPS_SCRIPT_URL + '?action=getClients')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      if (data && data.success && data.clients) {
-        clients = data.clients;
-        saveClientsToStorage();
-        renderClients(clients);
-        updateStats();
-        badge.className = 'sync-badge';
-        badge.textContent = '🟢 Sheets Live';
-        showToast('✅ Synced ' + clients.length + ' clients from Google Sheets');
-      } else {
-        badge.className = 'sync-badge syncing';
-        badge.textContent = '⚠️ Sync Failed';
-        showToast('⚠️ Could not sync from Sheets — using local data', 'error');
-      }
-    })
-    .catch(function() {
-      badge.className = 'sync-badge syncing';
-      badge.textContent = '⚠️ Offline';
-      showToast('⚠️ Offline — using local cache', 'error');
-    });
+
+  // Fetch clients AND tickets in parallel
+  Promise.all([
+    fetch(APPS_SCRIPT_URL + '?action=getClients').then(function(r) { return r.json(); }),
+    fetch(APPS_SCRIPT_URL + '?action=getTickets').then(function(r) { return r.json(); })
+  ])
+  .then(function(results) {
+    var clientData = results[0];
+    var ticketData = results[1];
+
+    if (clientData && clientData.success) {
+      clients = clientData.clients;
+      saveClientsToStorage();
+    }
+    if (ticketData && ticketData.success) {
+      tickets = ticketData.tickets;
+      saveTicketsToStorage();
+    }
+
+    renderClients(clients);
+    updateStats();
+    badge.className = 'sync-badge';
+    badge.textContent = '🟢 Sheets Live';
+    showToast('✅ Synced ' + clients.length + ' clients & ' + tickets.length + ' tickets');
+  })
+  .catch(function() {
+    badge.className = 'sync-badge syncing';
+    badge.textContent = '⚠️ Offline';
+    showToast('⚠️ Offline — using local cache', 'error');
+  });
 }
 
 function saveClientToSheets(client) {
   return fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'addClient',
-      slug: client.slug,
-      name: client.name,
-      location: client.location,
-      contact: client.contact,
-      phone: client.phone,
-      equipment: client.equipment.join(', '),
-      status: client.status
-    })
+    body: JSON.stringify({ action: 'addClient', slug: client.slug, name: client.name, location: client.location, contact: client.contact, phone: client.phone, equipment: client.equipment.join(', '), status: client.status })
   });
 }
 
 function submitTicketToSheets(clientName, location, issueType, details) {
   return fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'addTicket',
-      clientName: clientName,
-      location: location,
-      issueType: issueType,
-      details: details || 'No additional details provided'
-    })
+    body: JSON.stringify({ action: 'addTicket', clientName: clientName, location: location, issueType: issueType, details: details || 'No additional details provided' })
+  });
+}
+
+function updateTicketInSheets(rowIndex, status) {
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'updateTicket', rowIndex: rowIndex, status: status })
   });
 }
 
@@ -586,8 +579,7 @@ function submitLogin() {
   var error = document.getElementById('login-error');
   var attempts = document.getElementById('login-attempts');
   if (input === ADMIN_PASSWORD) {
-    isAuthenticated = true;
-    loginAttempts = 0;
+    isAuthenticated = true; loginAttempts = 0;
     error.classList.remove('show');
     document.getElementById('login-password').value = '';
     showLanding();
@@ -611,16 +603,11 @@ function showAdmin() {
   refreshFromSheets();
 }
 function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
-function hideAll() {
-  ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client']
-    .forEach(function(id) { document.getElementById(id).classList.add('hidden'); });
-}
+function hideAll() { ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
 
 function switchTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.admin-tab').forEach(function(t) {
-    if (t.textContent.toLowerCase().includes(tab)) t.classList.add('active');
-  });
+  document.querySelectorAll('.admin-tab').forEach(function(t) { if (t.textContent.toLowerCase().includes(tab)) t.classList.add('active'); });
   if (tab === 'clients') {
     document.getElementById('tab-clients').classList.remove('hidden');
     document.getElementById('tab-tickets').classList.add('hidden');
@@ -632,16 +619,13 @@ function switchTab(tab) {
 }
 
 function showClientPortal(client) {
-  hideAll();
-  currentClient = client;
+  hideAll(); currentClient = client;
   document.getElementById('view-client').classList.remove('hidden');
   document.getElementById('client-display-name').textContent = client.name.toUpperCase();
   document.getElementById('client-display-location').textContent = '📍 ' + client.location;
   var eqList = document.getElementById('client-equipment-list');
   eqList.innerHTML = '';
-  var eqArray = Array.isArray(client.equipment)
-    ? client.equipment
-    : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
+  var eqArray = Array.isArray(client.equipment) ? client.equipment : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
   eqArray.forEach(function(eq) {
     var badge = document.createElement('div');
     badge.className = 'client-eq-badge ' + getEqClass(eq);
@@ -662,15 +646,10 @@ function showClientDemo() {
 function renderClients(list) {
   var tbody = document.getElementById('clients-table-body');
   tbody.innerHTML = '';
-  if (!list || list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>';
-    return;
-  }
+  if (!list || list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:40px;">No clients yet — add your first client!</td></tr>'; return; }
   list.forEach(function(client) {
     var nfcUrl = PORTAL_BASE_URL + '?client=' + client.slug;
-    var eqArray = Array.isArray(client.equipment)
-      ? client.equipment
-      : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
+    var eqArray = Array.isArray(client.equipment) ? client.equipment : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
     var tr = document.createElement('tr');
     var eqTags = eqArray.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('');
     tr.innerHTML =
@@ -688,10 +667,6 @@ function renderClients(list) {
   });
 }
 
-function escHtml(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(obj) { return "'" + JSON.stringify(obj).replace(/'/g, "\\'") + "'"; }
-function showNFCModal_client(clientJson) { var client = typeof clientJson === 'string' ? JSON.parse(clientJson) : clientJson; showNFCModal(client); }
-
 function renderTickets() {
   var tbody = document.getElementById('tickets-table-body');
   tbody.innerHTML = '';
@@ -700,19 +675,14 @@ function renderTickets() {
     if (ticketFilter === 'closed') return t.status === 'closed';
     return true;
   });
-  if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">' + (ticketFilter === 'all' ? 'No tickets yet' : 'No ' + ticketFilter + ' tickets') + '</td></tr>';
-    return;
-  }
+  if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">' + (ticketFilter === 'all' ? 'No tickets yet' : 'No ' + ticketFilter + ' tickets') + '</td></tr>'; return; }
   filtered.forEach(function(ticket) {
-    var client = clients.find(function(c) { return c.id === ticket.clientId; });
-    var clientName = client ? client.name : ticket.clientName || 'Unknown Client';
     var tr = document.createElement('tr');
     var actionBtn = ticket.status === 'closed'
-      ? '<button class="btn-view" onclick="reopenTicket(' + ticket.id + ')">Reopen</button>'
-      : '<button class="btn-primary" style="padding:6px 12px;font-size:11px;" onclick="closeTicket(' + ticket.id + ')">Mark Complete</button>';
+      ? '<button class="btn-view" onclick="reopenTicket(' + ticket.id + ',' + (ticket.rowIndex || 0) + ')">Reopen</button>'
+      : '<button class="btn-primary" style="padding:6px 12px;font-size:11px;" onclick="closeTicket(' + ticket.id + ',' + (ticket.rowIndex || 0) + ')">Mark Complete</button>';
     tr.innerHTML =
-      '<td><div class="client-name-cell">' + escHtml(clientName) + '</div></td>' +
+      '<td><div class="client-name-cell">' + escHtml(ticket.clientName || 'Unknown') + '</div></td>' +
       '<td>' + escHtml(ticket.issue) + '</td>' +
       '<td><div class="ticket-details">' + (ticket.details ? escHtml(ticket.details) : '<em style="color:var(--muted);">No additional details</em>') + '</div></td>' +
       '<td><div class="ticket-time">' + formatTime(ticket.timestamp) + '</div></td>' +
@@ -729,8 +699,15 @@ function filterTickets(filter, e) {
   renderTickets();
 }
 function filterTicketSearch(query) { renderTickets(); }
-function closeTicket(id) { var t = tickets.find(function(t){return t.id===id;}); if(t){t.status='closed';saveTickets();renderTickets();updateStats();} }
-function reopenTicket(id) { var t = tickets.find(function(t){return t.id===id;}); if(t){t.status='open';saveTickets();renderTickets();updateStats();} }
+
+function closeTicket(id, rowIndex) {
+  var t = tickets.find(function(t) { return t.id === id; });
+  if (t) { t.status = 'closed'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'closed'); }
+}
+function reopenTicket(id, rowIndex) {
+  var t = tickets.find(function(t) { return t.id === id; });
+  if (t) { t.status = 'open'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'open'); }
+}
 
 function formatTime(timestamp) {
   var d = new Date(timestamp), now = new Date(), diff = now - d;
@@ -754,18 +731,16 @@ function addClient() {
   var slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   var newClient = { id: Date.now(), name: name, location: location, contact: contact, phone: phone, slug: slug, equipment: equipment, status: 'active' };
   var btn = document.getElementById('add-client-btn');
-  btn.textContent = 'Saving to Sheets...';
-  btn.disabled = true;
+  btn.textContent = 'Saving...'; btn.disabled = true;
   saveClientToSheets(newClient)
     .then(function() { showToast('✅ Client saved to Google Sheets!'); })
-    .catch(function() { showToast('⚠️ Sheets save may have failed — check your sheet', 'error'); });
+    .catch(function() { showToast('⚠️ Check your sheet manually', 'error'); });
   clients.unshift(newClient);
   saveClientsToStorage();
   ['input-name','input-location','input-contact','input-phone'].forEach(function(id){document.getElementById(id).value='';});
   ['eq-network','eq-cameras','eq-rack'].forEach(function(id){document.getElementById(id).checked=false;});
   document.getElementById('slug-preview').textContent = 'your-client-name';
-  btn.textContent = 'Generate NFC URL & Add Client';
-  btn.disabled = false;
+  btn.textContent = 'Generate NFC URL & Add Client'; btn.disabled = false;
   showAdmin();
   setTimeout(function() { showNFCModal(newClient); }, 300);
 }
@@ -773,16 +748,12 @@ function addClient() {
 function deleteClient(id) {
   if (confirm('Delete this client? Also delete from Google Sheets manually.')) {
     clients = clients.filter(function(c){return c.id!==id;});
-    saveClientsToStorage();
-    renderClients(clients);
-    updateStats();
+    saveClientsToStorage(); renderClients(clients); updateStats();
   }
 }
 
 function filterClients(query) {
-  var filtered = clients.filter(function(c) {
-    return (c.name||'').toLowerCase().includes(query.toLowerCase()) || (c.location||'').toLowerCase().includes(query.toLowerCase());
-  });
+  var filtered = clients.filter(function(c) { return (c.name||'').toLowerCase().includes(query.toLowerCase()) || (c.location||'').toLowerCase().includes(query.toLowerCase()); });
   renderClients(filtered);
 }
 
@@ -802,8 +773,8 @@ function updateSlug() {
 
 function saveClientsToStorage() { try { localStorage.setItem('wifyn_clients', JSON.stringify(clients)); } catch(e) {} }
 function loadClientsFromStorage() { try { var s = localStorage.getItem('wifyn_clients'); if(s) clients = JSON.parse(s); } catch(e) {} }
-function saveTickets() { try { localStorage.setItem('wifyn_tickets', JSON.stringify(tickets)); } catch(e) {} }
-function loadTickets() { try { var s = localStorage.getItem('wifyn_tickets'); if(s) tickets = JSON.parse(s); } catch(e) {} }
+function saveTicketsToStorage() { try { localStorage.setItem('wifyn_tickets', JSON.stringify(tickets)); } catch(e) {} }
+function loadTicketsFromStorage() { try { var s = localStorage.getItem('wifyn_tickets'); if(s) tickets = JSON.parse(s); } catch(e) {} }
 
 function showNFCModal(client) {
   var url = PORTAL_BASE_URL + '?client=' + client.slug;
@@ -815,20 +786,23 @@ function showNFCModal(client) {
 function closeModal() { document.getElementById('nfc-modal').classList.add('hidden'); document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }
 function copyNFCUrl() { navigator.clipboard.writeText(currentModalUrl).catch(function(){}); document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function(){document.getElementById('modal-copy-btn').textContent='Copy NFC URL';},2000); }
 function copyNFCUrlDirect(url, btn) { navigator.clipboard.writeText(url).catch(function(){}); btn.textContent='✓ Copied!'; btn.classList.add('copied'); setTimeout(function(){btn.textContent='Copy NFC URL';btn.classList.remove('copied');},2000); }
+function showNFCModal_client(clientJson) { var client = typeof clientJson === 'string' ? JSON.parse(clientJson) : clientJson; showNFCModal(client); }
 
 function selectIssue(btn, issue) { document.querySelectorAll('.issue-btn').forEach(function(b){b.classList.remove('selected');}); btn.classList.add('selected'); selectedIssue = issue; }
 
 function submitIssue() {
   if (!selectedIssue) { alert('Please select an issue type first'); return; }
   var details = document.getElementById('issue-details').value.trim();
-  var ticket = { id: Date.now(), clientId: currentClient.id, clientName: currentClient.name, issue: selectedIssue, details: details, timestamp: Date.now(), status: 'new' };
+  var ticket = { id: Date.now(), clientName: currentClient.name, issue: selectedIssue, details: details, timestamp: Date.now(), status: 'new' };
   tickets.unshift(ticket);
-  saveTickets();
+  saveTicketsToStorage();
   submitTicketToSheets(currentClient.name, currentClient.location, selectedIssue, details).catch(function(){});
   document.getElementById('issue-form-content').style.display = 'none';
   document.getElementById('issue-success').style.display = 'block';
 }
 
+function escHtml(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(obj) { return "'" + JSON.stringify(obj).replace(/'/g,"\\'") + "'"; }
 function getEqClass(eq) { if(eq==='UniFi Network') return 'eq-network'; if(eq==='UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
 function getEqTagClass(eq) { return getEqClass(eq); }
 function getEqIcon(eq) { if(eq==='UniFi Network') return '📡'; if(eq==='UniFi Cameras') return '📷'; return '🖥️'; }
