@@ -298,7 +298,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
         <div class="admin-stat"><div class="admin-stat-num" id="stat-total">0</div><div class="admin-stat-label">Total Clients</div></div>
         <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green);" id="stat-active">0</div><div class="admin-stat-label">Active</div></div>
         <div class="admin-stat"><div class="admin-stat-num" id="stat-nfc">0</div><div class="admin-stat-label">NFC Tags Generated</div></div>
-        <div class="admin-stat"><div class="admin-stat-num" style="color:var(--orange);" id="stat-tickets">0</div><div class="admin-stat-label">Open Tickets</div></div>
+        <div class="admin-stat"><div class="admin-stat-num" id="stat-tickets">0</div><div class="admin-stat-label">Open Tickets</div></div>
       </div>
       <div class="admin-table-wrap">
         <div class="admin-table-header">
@@ -359,7 +359,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
           <input type="text" class="form-input" id="input-contact" placeholder="e.g. John Smith">
         </div>
         <div class="form-field">
-          class="form-label">Contact Phone</label>
+          <label class="form-label">Contact Phone</label>
           <input type="text" class="form-input" id="input-phone" placeholder="e.g. (310) 555-0000">
         </div>
       </div>
@@ -494,8 +494,7 @@ function fetchClientBySlug(slug) {
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.success && data.client) {
-        hideAll();
-        showClientPortal(data.client);
+        hideAll(); showClientPortal(data.client);
       } else {
         showLoadingError('No client found for this link.<br>Please contact WiFyn for assistance.');
       }
@@ -518,8 +517,6 @@ function refreshFromSheets() {
   var badge = document.getElementById('sync-badge');
   badge.className = 'sync-badge syncing';
   badge.textContent = '🔄 Syncing...';
-
-  // Fetch clients AND tickets in parallel
   Promise.all([
     fetch(APPS_SCRIPT_URL + '?action=getClients').then(function(r) { return r.json(); }),
     fetch(APPS_SCRIPT_URL + '?action=getTickets').then(function(r) { return r.json(); })
@@ -527,16 +524,8 @@ function refreshFromSheets() {
   .then(function(results) {
     var clientData = results[0];
     var ticketData = results[1];
-
-    if (clientData && clientData.success) {
-      clients = clientData.clients;
-      saveClientsToStorage();
-    }
-    if (ticketData && ticketData.success) {
-      tickets = ticketData.tickets;
-      saveTicketsToStorage();
-    }
-
+    if (clientData && clientData.success) { clients = clientData.clients; saveClientsToStorage(); }
+    if (ticketData && ticketData.success) { tickets = ticketData.tickets; saveTicketsToStorage(); }
     renderClients(clients);
     updateStats();
     badge.className = 'sync-badge';
@@ -702,11 +691,26 @@ function filterTicketSearch(query) { renderTickets(); }
 
 function closeTicket(id, rowIndex) {
   var t = tickets.find(function(t) { return t.id === id; });
-  if (t) { t.status = 'closed'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'closed'); }
+  if (t) {
+    t.status = 'closed';
+    saveTicketsToStorage();
+    renderTickets();
+    updateStats();
+    if (rowIndex) updateTicketInSheets(rowIndex, 'closed');
+    showToast('✅ Ticket marked complete');
+  }
 }
+
 function reopenTicket(id, rowIndex) {
   var t = tickets.find(function(t) { return t.id === id; });
-  if (t) { t.status = 'open'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'open'); }
+  if (t) {
+    t.status = 'open';
+    saveTicketsToStorage();
+    renderTickets();
+    updateStats();
+    if (rowIndex) updateTicketInSheets(rowIndex, 'open');
+    showToast('🔄 Ticket reopened');
+  }
 }
 
 function formatTime(timestamp) {
@@ -763,6 +767,7 @@ function updateStats() {
   document.getElementById('stat-nfc').textContent = clients.length;
   var open = tickets.filter(function(t){return t.status!=='closed';}).length;
   document.getElementById('stat-tickets').textContent = open;
+  document.getElementById('stat-tickets').style.color = open > 0 ? 'var(--orange)' : 'var(--accent)';
   document.getElementById('open-ticket-count').textContent = open;
 }
 
