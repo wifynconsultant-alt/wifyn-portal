@@ -82,7 +82,6 @@ body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-s
 .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
 .admin-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; color: var(--white); }
 .admin-header-right { display: flex; gap: 12px; align-items: center; }
-
 .admin-tabs { display: flex; gap: 8px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
 .admin-tab { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 24px; background: transparent; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; position: relative; top: 1px; }
 .admin-tab:hover { color: var(--white); }
@@ -406,7 +405,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div>
 </div>
 
-<!-- CLIENT HISTORY VIEW -->
 <div id="view-client-history" class="hidden">
   <nav class="admin-nav">
     <div class="admin-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Admin</span></div>
@@ -420,18 +418,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       <div class="history-client-name" id="history-client-name">CLIENT NAME</div>
       <div class="history-client-location" id="history-client-location">📍 Location</div>
       <div class="history-stats">
-        <div class="history-stat">
-          <div class="history-stat-num" id="history-total">0</div>
-          <div class="history-stat-label">Total Tickets</div>
-        </div>
-        <div class="history-stat">
-          <div class="history-stat-num" id="history-open" style="color:var(--orange);">0</div>
-          <div class="history-stat-label">Open</div>
-        </div>
-        <div class="history-stat">
-          <div class="history-stat-num" id="history-resolved" style="color:var(--green);">0</div>
-          <div class="history-stat-label">Resolved</div>
-        </div>
+        <div class="history-stat"><div class="history-stat-num" id="history-total">0</div><div class="history-stat-label">Total Tickets</div></div>
+        <div class="history-stat"><div class="history-stat-num" id="history-open" style="color:var(--orange);">0</div><div class="history-stat-label">Open</div></div>
+        <div class="history-stat"><div class="history-stat-num" id="history-resolved" style="color:var(--green);">0</div><div class="history-stat-label">Resolved</div></div>
       </div>
     </div>
     <div class="history-timeline" id="history-timeline"></div>
@@ -630,14 +619,14 @@ function showAdmin() {
 function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
 function hideAll() { ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client','view-client-history'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
 
-function showClientHistory(client) {
+function showClientHistory(clientName, clientLocation) {
   hideAll();
   document.getElementById('view-client-history').classList.remove('hidden');
-  document.getElementById('history-client-name').textContent = client.name.toUpperCase();
-  document.getElementById('history-client-location').textContent = '📍 ' + client.location;
+  document.getElementById('history-client-name').textContent = clientName.toUpperCase();
+  document.getElementById('history-client-location').textContent = '📍 ' + clientLocation;
 
   var clientTickets = tickets.filter(function(t) {
-    return (t.clientName || '').toLowerCase() === client.name.toLowerCase();
+    return (t.clientName || '').toLowerCase().trim() === clientName.toLowerCase().trim();
   });
 
   var open = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
@@ -720,13 +709,15 @@ function renderClients(list) {
   list.forEach(function(client) {
     var nfcUrl = PORTAL_BASE_URL + '?client=' + client.slug;
     var eqArray = Array.isArray(client.equipment) ? client.equipment : (client.equipment || '').split(',').map(function(e) { return e.trim(); }).filter(Boolean);
-    var clientTickets = tickets.filter(function(t) { return (t.clientName || '').toLowerCase() === client.name.toLowerCase(); });
+    var clientTickets = tickets.filter(function(t) { return (t.clientName || '').toLowerCase().trim() === client.name.toLowerCase().trim(); });
     var openCount = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
     var ticketSummary = clientTickets.length === 0
       ? '<span style="color:var(--muted);font-size:12px;">None</span>'
       : '<span style="font-weight:600;color:' + (openCount > 0 ? 'var(--orange)' : 'var(--green)') + ';">' + clientTickets.length + ' total</span><span style="color:var(--muted);font-size:11px;margin-left:6px;">(' + openCount + ' open)</span>';
-    var tr = document.createElement('tr');
     var eqTags = eqArray.map(function(eq) { return '<span class="eq-tag ' + getEqTagClass(eq) + '">' + eq + '</span>'; }).join('');
+    var safeName = client.name.replace(/'/g, "\\'");
+    var safeLocation = client.location.replace(/'/g, "\\'");
+    var tr = document.createElement('tr');
     tr.innerHTML =
       '<td><div class="client-name-cell">' + escHtml(client.name) + '</div><div class="client-location-cell">📍 ' + escHtml(client.location) + '</div></td>' +
       '<td><div class="equipment-tags">' + eqTags + '</div></td>' +
@@ -735,13 +726,23 @@ function renderClients(list) {
       '<td><span class="status-dot status-active"></span><span style="font-size:12px;color:var(--green);">Active</span></td>' +
       '<td><div class="action-btns">' +
         '<button class="btn-copy" onclick="copyNFCUrlDirect(\'' + nfcUrl + '\', this)">Copy URL</button>' +
-        '<button class="btn-history" onclick="showClientHistory(' + escAttr(client) + ')">History</button>' +
-        '<button class="btn-view" onclick="showNFCModal_client(' + escAttr(client) + ')">NFC Tag</button>' +
-        '<button class="btn-view" onclick="showClientPortal(' + escAttr(client) + ')">Preview</button>' +
+        '<button class="btn-history" onclick="showClientHistory(\'' + safeName + '\',\'' + safeLocation + '\')">History</button>' +
+        '<button class="btn-view" onclick="showNFCModal_client(\'' + escHtml(client.slug) + '\',\'' + safeName + '\')">NFC Tag</button>' +
+        '<button class="btn-view" onclick="showClientPortalById(' + client.id + ')">Preview</button>' +
         '<button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button>' +
       '</div></td>';
     tbody.appendChild(tr);
   });
+}
+
+function showClientPortalById(id) {
+  var client = clients.find(function(c) { return c.id === id; });
+  if (client) showClientPortal(client);
+}
+
+function showNFCModal_client(slug, name) {
+  var client = { slug: slug, name: name };
+  showNFCModal(client);
 }
 
 function renderTickets() {
@@ -877,7 +878,6 @@ function showNFCModal(client) {
 function closeModal() { document.getElementById('nfc-modal').classList.add('hidden'); document.getElementById('modal-copy-btn').textContent = 'Copy NFC URL'; }
 function copyNFCUrl() { navigator.clipboard.writeText(currentModalUrl).catch(function(){}); document.getElementById('modal-copy-btn').textContent = '✓ Copied!'; setTimeout(function(){document.getElementById('modal-copy-btn').textContent='Copy NFC URL';},2000); }
 function copyNFCUrlDirect(url, btn) { navigator.clipboard.writeText(url).catch(function(){}); btn.textContent='✓ Copied!'; btn.classList.add('copied'); setTimeout(function(){btn.textContent='Copy NFC URL';btn.classList.remove('copied');},2000); }
-function showNFCModal_client(clientJson) { var client = typeof clientJson === 'string' ? JSON.parse(clientJson) : clientJson; showNFCModal(client); }
 
 function selectIssue(btn, issue) { document.querySelectorAll('.issue-btn').forEach(function(b){b.classList.remove('selected');}); btn.classList.add('selected'); selectedIssue = issue; }
 
@@ -893,7 +893,6 @@ function submitIssue() {
 }
 
 function escHtml(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(obj) { return "'" + JSON.stringify(obj).replace(/'/g,"\\'") + "'"; }
 function getEqClass(eq) { if(eq==='UniFi Network') return 'eq-network'; if(eq==='UniFi Cameras') return 'eq-cameras'; return 'eq-rack'; }
 function getEqTagClass(eq) { return getEqClass(eq); }
 function getEqIcon(eq) { if(eq==='UniFi Network') return '📡'; if(eq==='UniFi Cameras') return '📷'; return '🖥️'; }
