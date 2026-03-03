@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiFyn — Proposal Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080c10;
+  --panel: #111820;
+  --panel2: #0e1620;
+  --accent: #00e5ff;
+  --orange: #ff6b35;
+  --green: #28c840;
+  --muted: #6b8096;
+  --white: #f0f4f8;
+  --border: rgba(255,255,255,0.07);
+  --border-accent: rgba(0,229,255,0.2);
+}
+body { background: var(--bg); color: var(--white); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+.hidden { display: none !important; }
+
+/* ── NAV ── */
+.nav { background: rgba(8,12,16,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; }
+.nav-logo span { color: var(--accent); }
+.nav-right { display: flex; gap: 12px; align-items: center; }
+.nav-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); padding: 4px 12px; border-radius: 100px; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; text-decoration: none; }
+.btn-primary { background: var(--accent); color: var(--bg); font-size: 13px; padding: 14px 28px; }
+.btn-primary:hover { background: #00cef5; box-shadow: 0 0 30px rgba(0,229,255,0.4); transform: translateY(-2px); }
+.btn-secondary { background: transparent; color: var(--white); font-size: 13px; padding: 14px 28px; border: 1px solid rgba(255,255,255,0.15); }
+.btn-secondary:hover { border-color: var(--border-accent); color: var(--accent); }
+.btn-sm { font-size: 11px; padding: 8px 16px; }
+.btn-danger { background: rgba(255,59,48,0.1); color: #ff3b30; font-size: 12px; padding: 7px 14px; border: 1px solid rgba(255,59,48,0.2); }
+.btn-danger:hover { background: rgba(255,59,48,0.2); }
+.btn-green { background: rgba(40,200,64,0.1); color: var(--green); font-size: 12px; padding: 7px 14px; border: 1px solid rgba(40,200,64,0.2); }
+.btn-green:hover { background: rgba(40,200,64,0.2); }
+
+/* ── VIEWS ── */
+#view-builder { padding: 40px; max-width: 1100px; margin: 0 auto; }
+#view-preview { padding: 0; }
+
+/* ── BUILDER HEADER ── */
+.builder-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+.builder-header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 0.02em; }
+.tag { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; }
+
+/* ── FORM GRID ── */
+.builder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.builder-col { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── SECTION CARD ── */
+.section-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.section-icon { font-size: 18px; }
+
+/* ── FORM FIELDS ── */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+input, textarea, select {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 11px 14px; font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--white);
+  outline: none; transition: border-color 0.2s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--border-accent); box-shadow: 0 0 0 3px rgba(0,229,255,0.05); }
+input::placeholder, textarea::placeholder { color: rgba(107,128,150,0.4); }
+select option { background: #111820; }
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── SERVICE ITEMS ── */
+.services-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.service-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.service-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.service-item-icon { font-size: 18px; }
+.service-item-name { font-weight: 600; font-size: 14px; flex: 1; }
+.service-item-toggle { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+.service-item-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.service-item-body.disabled { opacity: 0.35; pointer-events: none; }
+
+/* ── LINE ITEMS ── */
+.line-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.line-item { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.line-item-desc { font-size: 13px; color: var(--white); }
+.line-item-cat { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+.cat-labor { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+.cat-equipment { background: rgba(255,107,53,0.1); color: var(--orange); border: 1px solid rgba(255,107,53,0.2); }
+.line-item-price { font-size: 13px; font-weight: 600; color: var(--white); white-space: nowrap; min-width: 70px; text-align: right; }
+.line-item-del { background: transparent; border: none; color: rgba(255,59,48,0.5); cursor: pointer; font-size: 14px; padding: 2px 4px; transition: color 0.2s; }
+.line-item-del:hover { color: #ff3b30; }
+
+/* ADD LINE ITEM FORM */
+.add-line-form { background: rgba(0,229,255,0.03); border: 1px dashed rgba(0,229,255,0.15); border-radius: 10px; padding: 14px; }
+.add-line-form .field-row { grid-template-columns: 2fr 1fr 1fr; }
+
+/* ── TOTALS ── */
+.totals-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.total-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.total-row:last-child { border-bottom: none; padding-top: 10px; margin-top: 4px; }
+.total-row.grand { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--white); }
+.total-row.grand .total-amount { color: var(--accent); }
+.total-label-labor { color: var(--accent); }
+.total-label-equip { color: var(--orange); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; font-size: 13px; font-weight: 500; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.toast-success { border-color: rgba(40,200,64,0.3); color: var(--green); }
+
+/* ══════════════════════════════════
+   PROPOSAL PREVIEW (print-ready)
+══════════════════════════════════ */
+#view-preview { background: #f4f6f8; min-height: 100vh; }
+
+.preview-toolbar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.preview-toolbar-left { display: flex; gap: 12px; align-items: center; }
+.preview-toolbar-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--white); }
+
+.proposal-wrap { max-width: 820px; margin: 40px auto; padding: 0 24px 60px; }
+
+.proposal-doc {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* PROPOSAL HEADER */
+.prop-header {
+  background: #080c10;
+  padding: 48px 48px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.prop-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.prop-header-inner { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; }
+.prop-logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.08em; color: #f0f4f8; line-height: 1; margin-bottom: 6px; }
+.prop-logo-text span { color: #00e5ff; }
+.prop-logo-sub { font-size: 11px; color: #6b8096; letter-spacing: 0.1em; text-transform: uppercase; }
+.prop-header-right { text-align: right; }
+.prop-label { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.06em; color: #00e5ff; margin-bottom: 4px; }
+.prop-num { font-size: 12px; color: #6b8096; letter-spacing: 0.06em; }
+.prop-date { font-size: 12px; color: #6b8096; letter-spacing: 0.04em; margin-top: 2px; }
+
+/* PROP META */
+.prop-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 3px solid #00e5ff; }
+.prop-meta-block { padding: 20px 24px; border-right: 1px solid #e8ecf0; }
+.prop-meta-block:last-child { border-right: none; }
+.prop-meta-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6b8096; margin-bottom: 4px; }
+.prop-meta-value { font-size: 14px; font-weight: 600; color: #1a2535; }
+.prop-meta-sub { font-size: 12px; color: #6b8096; margin-top: 2px; }
+
+/* PROP BODY */
+.prop-body { padding: 36px 48px; }
+.prop-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  color: #1a2535;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e8ecf0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.prop-section-title::before { content: ''; display: block; width: 4px; height: 18px; background: #00e5ff; border-radius: 2px; }
+
+/* LINE ITEMS TABLE */
+.prop-table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+.prop-table th { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6b8096; padding: 8px 12px; text-align: left; background: #f8fafc; border-bottom: 2px solid #e8ecf0; }
+.prop-table th:last-child { text-align: right; }
+.prop-table td { padding: 12px 12px; font-size: 13px; color: #1a2535; border-bottom: 1px solid #f0f4f8; vertical-align: middle; }
+.prop-table td:last-child { text-align: right; font-weight: 600; }
+.prop-table tr:last-child td { border-bottom: none; }
+.prop-cat-badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; }
+.prop-cat-labor { background: rgba(0,229,255,0.1); color: #0099bb; }
+.prop-cat-equip { background: rgba(255,107,53,0.1); color: #cc4400; }
+
+/* PROP TOTALS */
+.prop-totals { display: flex; justify-content: flex-end; margin-bottom: 28px; }
+.prop-totals-box { width: 280px; }
+.prop-total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #6b8096; border-bottom: 1px solid #f0f4f8; }
+.prop-total-row:last-child { border-bottom: none; border-top: 2px solid #1a2535; padding-top: 10px; margin-top: 4px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: #1a2535; }
+.prop-total-row:last-child .prop-total-val { color: #00b8cc; }
+.prop-total-labor { color: #0099bb; }
+.prop-total-equip { color: #cc4400; }
+
+/* SCOPE / NOTES */
+.prop-scope { background: #f8fafc; border-left: 4px solid #00e5ff; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 28px; font-size: 13px; color: #3d5166; line-height: 1.7; }
+
+/* TERMS */
+.prop-terms { font-size: 11px; color: #8ba0b4; line-height: 1.7; margin-bottom: 28px; padding: 16px 20px; background: #f8fafc; border-radius: 8px; }
+.prop-terms strong { color: #6b8096; }
+
+/* SIGNATURE */
+.prop-signature { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 12px; }
+.prop-sig-block { }
+.prop-sig-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #6b8096; margin-bottom: 32px; }
+.prop-sig-line { border-bottom: 1px solid #c8d4e0; margin-bottom: 6px; }
+.prop-sig-name { font-size: 12px; color: #3d5166; }
+
+/* PROP FOOTER */
+.prop-footer { background: #080c10; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; }
+.prop-footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; color: #f0f4f8; }
+.prop-footer-logo span { color: #00e5ff; }
+.prop-footer-info { font-size: 11px; color: #6b8096; text-align: center; line-height: 1.6; }
+.prop-footer-contact { font-size: 11px; color: #6b8096; text-align: right; line-height: 1.6; }
+.prop-footer-contact a { color: #00e5ff; text-decoration: none; }
+
+@media print {
+  .preview-toolbar { display: none !important; }
+  #view-preview { background: white; }
+  .proposal-wrap { margin: 0; padding: 0; max-width: 100%; }
+  .proposal-doc { box-shadow: none; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">WI<span>FYN</span> <span style="font-size:14px;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:0.05em;">Proposals</span></div>
+  <div class="nav-right">
+    <span class="nav-badge">✦ Generator</span>
+    <button class="btn btn-secondary btn-sm" id="btn-preview" onclick="showPreview()" style="display:none;">👁 Preview Proposal</button>
+    <button class="btn btn-primary btn-sm" id="btn-back" onclick="showBuilder()" style="display:none;">← Edit</button>
+  </div>
+</nav>
+
+<!-- ══ BUILDER VIEW ══ -->
+<div id="view-builder">
+  <div class="builder-header">
+    <div>
+      <span class="tag">— New Proposal</span>
+      <h1>PROPOSAL BUILDER</h1>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-secondary" onclick="clearAll()">↺ Reset</button>
+      <button class="btn btn-primary" onclick="showPreview()">Generate Proposal →</button>
+    </div>
+  </div>
+
+  <div class="builder-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="builder-col">
+
+      <!-- CLIENT INFO -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">👤</span> Client Information</div>
+        <div class="field">
+          <label>Client / Business Name *</label>
+          <input type="text" id="client-name" placeholder="e.g. Plummer Law Group">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Contact Name</label>
+            <input type="text" id="client-contact" placeholder="e.g. John Plummer">
+          </div>
+          <div class="field">
+            <label>Phone</label>
+            <input type="text" id="client-phone" placeholder="(310) 555-0000">
+          </div>
+        </div>
+        <div class="field">
+          <label>Address</label>
+          <input type="text" id="client-address" placeholder="e.g. 1234 Ventura Blvd, Sherman Oaks, CA">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="text" id="client-email" placeholder="e.g. john@plummerlaw.com">
+        </div>
+      </div>
+
+      <!-- PROPOSAL INFO -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">📋</span> Proposal Details</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Proposal #</label>
+            <input type="text" id="prop-number" placeholder="e.g. WF-2026-001">
+          </div>
+          <div class="field">
+            <label>Valid Until</label>
+            <input type="date" id="prop-expiry">
+          </div>
+        </div>
+        <div class="field">
+          <label>Project / Scope Title</label>
+          <input type="text" id="prop-title" placeholder="e.g. Full Network & Camera Install">
+        </div>
+        <div class="field">
+          <label>Scope of Work / Notes</label>
+          <textarea id="prop-scope" placeholder="Describe what's included, timeline, special instructions..."></textarea>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">⚙️</span> Services</div>
+        <div class="services-list" id="services-list">
+
+          <!-- UniFi Network -->
+          <div class="service-item" id="svc-network">
+            <div class="service-item-header">
+              <input type="checkbox" class="service-item-toggle" onchange="toggleService('network',this)" checked>
+              <span class="service-item-icon">📡</span>
+              <span class="service-item-name">UniFi Network Install</span>
+            </div>
+            <div class="service-item-body" id="svc-network-body">
+              <div class="field"><label>Base Labor ($)</label><input type="number" id="svc-network-labor" value="450" min="0"></div>
+              <div class="field"><label>Equipment ($)</label><input type="number" id="svc-network-equip" value="800" min="0"></div>
+              <div class="field"><label>Qty / Notes</label><input type="text" id="svc-network-notes" placeholder="e.g. 3 APs"></div>
+            </div>
+          </div>
+
+          <!-- Camera System -->
+          <div class="service-item" id="svc-cameras">
+            <div class="service-item-header">
+              <input type="checkbox" class="service-item-toggle" onchange="toggleService('cameras',this)">
+              <span class="service-item-icon">📷</span>
+              <span class="service-item-name">UniFi Camera System</span>
+            </div>
+            <div class="service-item-body disabled" id="svc-cameras-body">
+              <div class="field"><label>Base Labor ($)</label><input type="number" id="svc-cameras-labor" value="350" min="0"></div>
+              <div class="field"><label>Equipment ($)</label><input type="number" id="svc-cameras-equip" value="1200" min="0"></div>
+              <div class="field"><label>Qty / Notes</label><input type="text" id="svc-cameras-notes" placeholder="e.g. 6 cameras"></div>
+            </div>
+          </div>
+
+          <!-- Server Rack -->
+          <div class="service-item" id="svc-rack">
+            <div class="service-item-header">
+              <input type="checkbox" class="service-item-toggle" onchange="toggleService('rack',this)">
+              <span class="service-item-icon">🖥️</span>
+              <span class="service-item-name">Server Rack Build</span>
+            </div>
+            <div class="service-item-body disabled" id="svc-rack-body">
+              <div class="field"><label>Base Labor ($)</label><input type="number" id="svc-rack-labor" value="300" min="0"></div>
+              <div class="field"><label>Equipment ($)</label><input type="number" id="svc-rack-equip" value="600" min="0"></div>
+              <div class="field"><label>Qty / Notes</label><input type="text" id="svc-rack-notes" placeholder="e.g. 12U rack"></div>
+            </div>
+          </div>
+
+          <!-- Support Plan -->
+          <div class="service-item" id="svc-support">
+            <div class="service-item-header">
+              <input type="checkbox" class="service-item-toggle" onchange="toggleService('support',this)">
+              <span class="service-item-icon">🛡️</span>
+              <span class="service-item-name">Support Plan</span>
+            </div>
+            <div class="service-item-body disabled" id="svc-support-body">
+              <div class="field"><label>Monthly ($)</label><input type="number" id="svc-support-labor" value="150" min="0"></div>
+              <div class="field"><label>Setup Fee ($)</label><input type="number" id="svc-support-equip" value="0" min="0"></div>
+              <div class="field"><label>Plan Type</label><input type="text" id="svc-support-notes" placeholder="e.g. Basic / Pro"></div>
+            </div>
+          </div>
+
+          <!-- Smart Home -->
+          <div class="service-item" id="svc-smarthome">
+            <div class="service-item-header">
+              <input type="checkbox" class="service-item-toggle" onchange="toggleService('smarthome',this)">
+              <span class="service-item-icon">🏠</span>
+              <span class="service-item-name">Smart Home / AV</span>
+            </div>
+            <div class="service-item-body disabled" id="svc-smarthome-body">
+              <div class="field"><label>Base Labor ($)</label><input type="number" id="svc-smarthome-labor" value="400" min="0"></div>
+              <div class="field"><label>Equipment ($)</label><input type="number" id="svc-smarthome-equip" value="900" min="0"></div>
+              <div class="field"><label>Qty / Notes</label><input type="text" id="svc-smarthome-notes" placeholder="e.g. 2 rooms"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="builder-col">
+
+      <!-- CUSTOM LINE ITEMS -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">➕</span> Custom Add-Ons</div>
+        <div class="line-items" id="line-items-list"></div>
+        <div class="add-line-form">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Add Custom Line Item</div>
+          <div class="field">
+            <label>Description</label>
+            <input type="text" id="new-item-desc" placeholder="e.g. Cable management, conduit run...">
+          </div>
+          <div class="field-row" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="field">
+              <label>Type</label>
+              <select id="new-item-cat">
+                <option value="labor">Labor</option>
+                <option value="equipment">Equipment</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Price ($)</label>
+              <input type="number" id="new-item-price" placeholder="0" min="0">
+            </div>
+            <div class="field" style="display:flex;align-items:flex-end;">
+              <button class="btn btn-primary" style="width:100%;padding:11px 8px;font-size:11px;" onclick="addLineItem()">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE TOTALS -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">💰</span> Live Total</div>
+        <div class="totals-box">
+          <div class="total-row"><span class="total-label-labor">Labor</span><span id="total-labor">$0</span></div>
+          <div class="total-row"><span class="total-label-equip">Equipment</span><span id="total-equip">$0</span></div>
+          <div class="total-row"><span style="color:var(--muted);">Add-Ons</span><span id="total-addons">$0</span></div>
+          <div class="total-row grand"><span>TOTAL</span><span class="total-amount" id="total-grand">$0</span></div>
+        </div>
+      </div>
+
+      <!-- TERMS -->
+      <div class="section-card">
+        <div class="section-title"><span class="section-icon">📜</span> Terms & Conditions</div>
+        <div class="field">
+          <label>Payment Terms</label>
+          <select id="terms-payment">
+            <option value="50% deposit required to begin. Remaining balance due upon project completion.">50% deposit, balance on completion</option>
+            <option value="100% payment due upon project completion.">100% on completion</option>
+            <option value="Full payment required prior to project start.">100% upfront</option>
+            <option value="Net 30 — invoice due within 30 days of project completion.">Net 30</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Warranty</label>
+          <select id="terms-warranty">
+            <option value="All labor is warranted for 90 days from installation date.">90-day labor warranty</option>
+            <option value="All labor is warranted for 1 year from installation date.">1-year labor warranty</option>
+            <option value="Equipment carries manufacturer warranty. Labor warranted for 90 days.">Manufacturer warranty on equipment</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Additional Terms</label>
+          <textarea id="terms-extra" placeholder="Any additional terms, cancellation policy, etc...">This proposal is valid for 30 days from the date issued. WiFyn is not responsible for pre-existing infrastructure issues. All work performed by certified Ubiquiti UniFi installers.</textarea>
+        </div>
+      </div>
+
+      <!-- GENERATE -->
+      <button class="btn btn-primary" style="width:100%;padding:18px;font-size:15px;" onclick="showPreview()">
+        ✦ Generate Proposal
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ PREVIEW VIEW ══ -->
+<div id="view-preview" class="hidden">
+  <div class="preview-toolbar">
+    <div class="preview-toolbar-left">
+      <button class="btn btn-secondary btn-sm" onclick="showBuilder()">← Edit</button>
+      <span class="preview-toolbar-title">PROPOSAL PREVIEW</span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-secondary btn-sm" onclick="copyProposalLink()">🔗 Copy Link</button>
+      <button class="btn btn-primary btn-sm" onclick="window.print()">🖨 Print / Save PDF</button>
+    </div>
+  </div>
+  <div class="proposal-wrap">
+    <div class="proposal-doc" id="proposal-doc">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+var customLines = [];
+var services = {
+  network:   { name: 'UniFi Network Install',  icon: '📡', enabled: true },
+  cameras:   { name: 'UniFi Camera System',    icon: '📷', enabled: false },
+  rack:      { name: 'Server Rack Build',      icon: '🖥️', enabled: false },
+  support:   { name: 'Support Plan',           icon: '🛡️', enabled: false },
+  smarthome: { name: 'Smart Home / AV',        icon: '🏠', enabled: false }
+};
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', function() {
+  // default proposal number
+  var now = new Date();
+  document.getElementById('prop-number').value = 'WF-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + String(Math.floor(Math.random()*90)+10);
+  // default expiry 30 days out
+  var exp = new Date(); exp.setDate(exp.getDate()+30);
+  document.getElementById('prop-expiry').value = exp.toISOString().split('T')[0];
+  // live totals
+  document.querySelectorAll('input[type=number]').forEach(function(el) { el.addEventListener('input', updateTotals); });
+  updateTotals();
+});
+
+function toggleService(key, cb) {
+  services[key].enabled = cb.checked;
+  document.getElementById('svc-'+key+'-body').classList.toggle('disabled', !cb.checked);
+  updateTotals();
+}
+
+function updateTotals() {
+  var labor = 0, equip = 0, addons = 0;
+  Object.keys(services).forEach(function(k) {
+    if (!services[k].enabled) return;
+    labor += parseFloat(document.getElementById('svc-'+k+'-labor').value) || 0;
+    equip += parseFloat(document.getElementById('svc-'+k+'-equip').value) || 0;
+  });
+  customLines.forEach(function(l) {
+    if (l.cat === 'labor') addons += l.price;
+    else addons += l.price;
+  });
+  document.getElementById('total-labor').textContent = '$' + labor.toLocaleString();
+  document.getElementById('total-equip').textContent = '$' + equip.toLocaleString();
+  document.getElementById('total-addons').textContent = '$' + addons.toLocaleString();
+  document.getElementById('total-grand').textContent = '$' + (labor+equip+addons).toLocaleString();
+}
+
+function addLineItem() {
+  var desc = document.getElementById('new-item-desc').value.trim();
+  var cat  = document.getElementById('new-item-cat').value;
+  var price = parseFloat(document.getElementById('new-item-price').value) || 0;
+  if (!desc) { showToast('Enter a description', 'error'); return; }
+  customLines.push({ id: Date.now(), desc: desc, cat: cat, price: price });
+  document.getElementById('new-item-desc').value = '';
+  document.getElementById('new-item-price').value = '';
+  renderLineItems();
+  updateTotals();
+}
+
+function removeLineItem(id) {
+  customLines = customLines.filter(function(l) { return l.id !== id; });
+  renderLineItems();
+  updateTotals();
+}
+
+function renderLineItems() {
+  var list = document.getElementById('line-items-list');
+  list.innerHTML = '';
+  if (customLines.length === 0) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:12px;">No custom add-ons yet</div>';
+    return;
+  }
+  customLines.forEach(function(l) {
+    var div = document.createElement('div');
+    div.className = 'line-item';
+    div.innerHTML =
+      '<span class="line-item-desc">' + esc(l.desc) + '</span>' +
+      '<span class="line-item-cat cat-' + l.cat + '">' + l.cat + '</span>' +
+      '<span class="line-item-price">$' + l.price.toLocaleString() + '</span>' +
+      '<button class="line-item-del" onclick="removeLineItem(' + l.id + ')">✕</button>';
+    list.appendChild(div);
+  });
+}
+
+function clearAll() {
+  if (!confirm('Reset the form?')) return;
+  document.querySelectorAll('input[type=text], input[type=date], textarea').forEach(function(el) { el.value = ''; });
+  document.querySelectorAll('input[type=number]').forEach(function(el) { el.value = el.defaultValue; });
+  customLines = [];
+  renderLineItems();
+  updateTotals();
+}
+
+// ── SHOW/HIDE VIEWS ──
+function showBuilder() {
+  document.getElementById('view-builder').classList.remove('hidden');
+  document.getElementById('view-preview').classList.add('hidden');
+  document.getElementById('btn-preview').style.display = 'none';
+  document.getElementById('btn-back').style.display = 'none';
+}
+
+function showPreview() {
+  var clientName = document.getElementById('client-name').value.trim();
+  if (!clientName) { showToast('Please enter a client name first', 'error'); return; }
+  buildProposal();
+  document.getElementById('view-builder').classList.add('hidden');
+  document.getElementById('view-preview').classList.remove('hidden');
+  document.getElementById('btn-back').style.display = 'inline-flex';
+  window.scrollTo(0,0);
+}
+
+// ── BUILD PROPOSAL HTML ──
+function buildProposal() {
+  var clientName    = val('client-name') || 'Client';
+  var clientContact = val('client-contact');
+  var clientPhone   = val('client-phone');
+  var clientAddress = val('client-address');
+  var clientEmail   = val('client-email');
+  var propNum       = val('prop-number');
+  var propExpiry    = val('prop-expiry') ? new Date(val('prop-expiry')).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
+  var propTitle     = val('prop-title') || 'Network & Technology Services';
+  var propScope     = val('prop-scope');
+  var termsPayment  = document.getElementById('terms-payment').value;
+  var termsWarranty = document.getElementById('terms-warranty').value;
+  var termsExtra    = val('terms-extra');
+  var today         = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  // Build line items rows
+  var tableRows = '';
+  var laborTotal = 0, equipTotal = 0;
+
+  Object.keys(services).forEach(function(k) {
+    if (!services[k].enabled) return;
+    var labor = parseFloat(document.getElementById('svc-'+k+'-labor').value) || 0;
+    var equip = parseFloat(document.getElementById('svc-'+k+'-equip').value) || 0;
+    var notes = document.getElementById('svc-'+k+'-notes').value;
+    laborTotal += labor;
+    equipTotal += equip;
+    if (labor > 0) tableRows += '<tr><td>' + services[k].icon + ' ' + services[k].name + (notes ? ' <span style="color:#8ba0b4;font-size:11px;">— '+esc(notes)+'</span>' : '') + '</td><td><span class="prop-cat-badge prop-cat-labor">Labor</span></td><td>$' + labor.toLocaleString() + '</td></tr>';
+    if (equip > 0) tableRows += '<tr><td>' + services[k].icon + ' ' + services[k].name + ' — Equipment</td><td><span class="prop-cat-badge prop-cat-equip">Equipment</span></td><td>$' + equip.toLocaleString() + '</td></tr>';
+  });
+
+  var addonsTotal = 0;
+  customLines.forEach(function(l) {
+    addonsTotal += l.price;
+    tableRows += '<tr><td>' + esc(l.desc) + '</td><td><span class="prop-cat-badge prop-cat-' + l.cat + '">' + l.cat + '</span></td><td>$' + l.price.toLocaleString() + '</td></tr>';
+  });
+
+  var grand = laborTotal + equipTotal + addonsTotal;
+
+  var html = `
+    <div class="prop-header">
+      <div class="prop-header-inner">
+        <div>
+          <div class="prop-logo-text">WI<span>FYN</span></div>
+          <div class="prop-logo-sub">Network & Security Specialists</div>
+        </div>
+        <div class="prop-header-right">
+          <div class="prop-label">PROPOSAL</div>
+          <div class="prop-num">#${esc(propNum)}</div>
+          <div class="prop-date">Issued: ${today}</div>
+          ${propExpiry ? '<div class="prop-date">Valid Until: ' + esc(propExpiry) + '</div>' : ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-meta">
+      <div class="prop-meta-block">
+        <div class="prop-meta-label">Prepared For</div>
+        <div class="prop-meta-value">${esc(clientName)}</div>
+        ${clientContact ? '<div class="prop-meta-sub">' + esc(clientContact) + '</div>' : ''}
+        ${clientAddress ? '<div class="prop-meta-sub">' + esc(clientAddress) + '</div>' : ''}
+      </div>
+      <div class="prop-meta-block">
+        <div class="prop-meta-label">Project</div>
+        <div class="prop-meta-value">${esc(propTitle)}</div>
+      </div>
+      <div class="prop-meta-block">
+        <div class="prop-meta-label">Contact WiFyn</div>
+        <div class="prop-meta-value">(818) 390-9252</div>
+        <div class="prop-meta-sub">wifynconsultant@gmail.com</div>
+        <div class="prop-meta-sub">wifyn.com</div>
+      </div>
+    </div>
+
+    <div class="prop-body">
+      ${propScope ? `<div class="prop-section-title">Scope of Work</div><div class="prop-scope">${esc(propScope).replace(/\n/g,'<br>')}</div>` : ''}
+
+      <div class="prop-section-title">Services & Pricing</div>
+      <table class="prop-table">
+        <thead><tr><th>Description</th><th>Type</th><th>Amount</th></tr></thead>
+        <tbody>${tableRows || '<tr><td colspan="3" style="color:#8ba0b4;text-align:center;padding:20px;">No services selected</td></tr>'}</tbody>
+      </table>
+
+      <div class="prop-totals">
+        <div class="prop-totals-box">
+          <div class="prop-total-row"><span class="prop-total-labor">Labor</span><span>$${laborTotal.toLocaleString()}</span></div>
+          <div class="prop-total-row"><span class="prop-total-equip">Equipment</span><span>$${equipTotal.toLocaleString()}</span></div>
+          ${addonsTotal > 0 ? '<div class="prop-total-row"><span>Add-Ons</span><span>$'+addonsTotal.toLocaleString()+'</span></div>' : ''}
+          <div class="prop-total-row"><span>TOTAL</span><span class="prop-total-val">$${grand.toLocaleString()}</span></div>
+        </div>
+      </div>
+
+      <div class="prop-section-title">Terms & Conditions</div>
+      <div class="prop-terms">
+        <strong>Payment:</strong> ${esc(termsPayment)}<br><br>
+        <strong>Warranty:</strong> ${esc(termsWarranty)}<br><br>
+        ${termsExtra ? esc(termsExtra).replace(/\n/g,'<br>') : ''}
+      </div>
+
+      <div class="prop-section-title">Authorization</div>
+      <div class="prop-signature">
+        <div class="prop-sig-block">
+          <div class="prop-sig-label">Client Signature</div>
+          <div class="prop-sig-line"></div>
+          <div class="prop-sig-name">${esc(clientContact || clientName)} &nbsp;&nbsp;&nbsp; Date: ___________</div>
+        </div>
+        <div class="prop-sig-block">
+          <div class="prop-sig-label">WiFyn Authorized By</div>
+          <div class="prop-sig-line"></div>
+          <div class="prop-sig-name">WiFyn Consultant &nbsp;&nbsp;&nbsp; Date: ___________</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prop-footer">
+      <div class="prop-footer-logo">WI<span>FYN</span></div>
+      <div class="prop-footer-info">Certified Ubiquiti UniFi Installer<br>Los Angeles, CA</div>
+      <div class="prop-footer-contact">(818) 390-9252<br><a href="mailto:wifynconsultant@gmail.com">wifynconsultant@gmail.com</a></div>
+    </div>
+  `;
+
+  document.getElementById('proposal-doc').innerHTML = html;
+}
+
+function copyProposalLink() {
+  navigator.clipboard.writeText(window.location.href).catch(function(){});
+  showToast('✅ Link copied!');
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-' + (type || 'success') + ' show';
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+function val(id) { return document.getElementById(id).value.trim(); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// init line items
+renderLineItems();
+</script>
+</body>
+</html>
