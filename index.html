@@ -156,7 +156,6 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .checkbox-item-label { font-size: 14px; font-weight: 500; color: var(--white); }
 .form-actions { display: flex; gap: 12px; margin-top: 32px; }
 
-/* ── CLIENT HISTORY ── */
 .history-main { padding: 40px; max-width: 900px; margin: 0 auto; }
 .history-header { margin-bottom: 32px; }
 .history-client-name { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 0.02em; color: var(--white); line-height: 1; }
@@ -221,6 +220,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .client-footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; color: var(--muted); }
 .client-footer-logo span { color: var(--accent); }
 .client-footer-sub { font-size: 11px; color: rgba(107,128,150,0.5); margin-top: 4px; }
+.client-footer-ig { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.client-footer-ig:hover { color: var(--accent); }
+.client-footer-ig-icon { font-size: 16px; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 480px; width: 100%; position: relative; }
@@ -301,6 +303,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       <span class="sync-badge" id="sync-badge">🟢 Sheets Live</span>
       <span class="admin-badge">🔒 Admin</span>
       <button class="btn-secondary" onclick="refreshFromSheets()" style="padding:8px 16px;font-size:11px;">↻ Sync</button>
+      <a href="/proposal" target="_blank" class="btn-primary" style="padding:8px 16px;font-size:11px;">📄 New Proposal</a>
       <button class="btn-secondary" onclick="showLanding()" style="padding:8px 16px;font-size:11px;">← Back</button>
     </div>
   </nav>
@@ -475,6 +478,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   <div class="client-footer">
     <div class="client-footer-logo">WI<span>FYN</span></div>
     <div class="client-footer-sub">Certified Ubiquiti UniFi Installer · Los Angeles, CA</div>
+    <a href="https://www.instagram.com/wifynconsultant/?hl=en" target="_blank" class="client-footer-ig">
+      <span class="client-footer-ig-icon">📸</span> @wifynconsultant
+    </a>
   </div>
 </div>
 
@@ -624,42 +630,27 @@ function showClientHistory(clientName, clientLocation) {
   document.getElementById('view-client-history').classList.remove('hidden');
   document.getElementById('history-client-name').textContent = clientName.toUpperCase();
   document.getElementById('history-client-location').textContent = '📍 ' + clientLocation;
-
   var clientTickets = tickets.filter(function(t) {
     return (t.clientName || '').toLowerCase().trim() === clientName.toLowerCase().trim();
   });
-
   var open = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
   var resolved = clientTickets.filter(function(t) { return t.status === 'closed'; }).length;
-
   document.getElementById('history-total').textContent = clientTickets.length;
   document.getElementById('history-open').textContent = open;
   document.getElementById('history-resolved').textContent = resolved;
-
   var timeline = document.getElementById('history-timeline');
   timeline.innerHTML = '';
-
   if (clientTickets.length === 0) {
     timeline.innerHTML = '<div class="history-empty"><div class="history-empty-icon">🎉</div><h3>No Issues Yet</h3><p style="color:var(--muted);font-size:13px;">This client has never submitted a support ticket.</p></div>';
     return;
   }
-
   clientTickets.forEach(function(ticket) {
     var icon = ticket.issue === 'Wi-Fi Down' ? '📶' : ticket.issue === 'Internet Down' ? '🌐' : '🛠️';
     var div = document.createElement('div');
     div.className = 'history-ticket';
     div.innerHTML =
-      '<div class="history-ticket-left">' +
-        '<div class="history-ticket-icon">' + icon + '</div>' +
-        '<div>' +
-          '<div class="history-ticket-issue">' + escHtml(ticket.issue) + '</div>' +
-          '<div class="history-ticket-details">' + (ticket.details ? escHtml(ticket.details) : 'No additional details') + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">' +
-        '<span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span>' +
-        '<div class="history-ticket-time">' + formatTime(ticket.timestamp) + '</div>' +
-      '</div>';
+      '<div class="history-ticket-left"><div class="history-ticket-icon">' + icon + '</div><div><div class="history-ticket-issue">' + escHtml(ticket.issue) + '</div><div class="history-ticket-details">' + (ticket.details ? escHtml(ticket.details) : 'No additional details') + '</div></div></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span><div class="history-ticket-time">' + formatTime(ticket.timestamp) + '</div></div>';
     timeline.appendChild(div);
   });
 }
@@ -729,6 +720,7 @@ function renderClients(list) {
         '<button class="btn-history" onclick="showClientHistory(\'' + safeName + '\',\'' + safeLocation + '\')">History</button>' +
         '<button class="btn-view" onclick="showNFCModal_client(\'' + escHtml(client.slug) + '\',\'' + safeName + '\')">NFC Tag</button>' +
         '<button class="btn-view" onclick="showClientPortalById(' + client.id + ')">Preview</button>' +
+        '<a href="/proposal?client=' + encodeURIComponent(client.name) + '" target="_blank" class="btn-view" style="text-decoration:none;">📄 Quote</a>' +
         '<button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button>' +
       '</div></td>';
     tbody.appendChild(tr);
@@ -739,11 +731,7 @@ function showClientPortalById(id) {
   var client = clients.find(function(c) { return c.id === id; });
   if (client) showClientPortal(client);
 }
-
-function showNFCModal_client(slug, name) {
-  var client = { slug: slug, name: name };
-  showNFCModal(client);
-}
+function showNFCModal_client(slug, name) { showNFCModal({ slug: slug, name: name }); }
 
 function renderTickets() {
   var tbody = document.getElementById('tickets-table-body');
@@ -780,26 +768,11 @@ function filterTicketSearch(query) { renderTickets(); }
 
 function closeTicket(id, rowIndex) {
   var t = tickets.find(function(t) { return t.id === id; });
-  if (t) {
-    t.status = 'closed';
-    saveTicketsToStorage();
-    renderTickets();
-    updateStats();
-    if (rowIndex) updateTicketInSheets(rowIndex, 'closed');
-    showToast('✅ Ticket marked complete');
-  }
+  if (t) { t.status = 'closed'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'closed'); showToast('✅ Ticket marked complete'); }
 }
-
 function reopenTicket(id, rowIndex) {
   var t = tickets.find(function(t) { return t.id === id; });
-  if (t) {
-    t.status = 'open';
-    saveTicketsToStorage();
-    renderTickets();
-    updateStats();
-    if (rowIndex) updateTicketInSheets(rowIndex, 'open');
-    showToast('🔄 Ticket reopened');
-  }
+  if (t) { t.status = 'open'; saveTicketsToStorage(); renderTickets(); updateStats(); if (rowIndex) updateTicketInSheets(rowIndex, 'open'); showToast('🔄 Ticket reopened'); }
 }
 
 function formatTime(timestamp) {
