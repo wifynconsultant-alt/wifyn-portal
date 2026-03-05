@@ -304,6 +304,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       <span class="admin-badge">🔒 Admin</span>
       <button class="btn-secondary" onclick="refreshFromSheets()" style="padding:8px 16px;font-size:11px;">↻ Sync</button>
       <a href="/proposal" target="_blank" class="btn-primary" style="padding:8px 16px;font-size:11px;">📄 New Proposal</a>
+      <a href="/report" target="_blank" class="btn-secondary" style="padding:8px 16px;font-size:11px;">📋 Network Report</a>
       <button class="btn-secondary" onclick="showLanding()" style="padding:8px 16px;font-size:11px;">← Back</button>
     </div>
   </nav>
@@ -530,13 +531,8 @@ function showToast(msg, type) {
 window.addEventListener('DOMContentLoaded', function() {
   var params = new URLSearchParams(window.location.search);
   var clientSlug = params.get('client');
-  if (clientSlug) {
-    fetchClientBySlug(clientSlug);
-  } else {
-    loadClientsFromStorage();
-    loadTicketsFromStorage();
-    showLogin();
-  }
+  if (clientSlug) { fetchClientBySlug(clientSlug); }
+  else { loadClientsFromStorage(); loadTicketsFromStorage(); showLogin(); }
 });
 
 function fetchClientBySlug(slug) {
@@ -571,8 +567,7 @@ function refreshFromSheets() {
   .then(function(results) {
     if (results[0] && results[0].success) { clients = results[0].clients; saveClientsToStorage(); }
     if (results[1] && results[1].success) { tickets = results[1].tickets; saveTicketsToStorage(); }
-    renderClients(clients);
-    updateStats();
+    renderClients(clients); updateStats();
     badge.className = 'sync-badge';
     badge.textContent = '🟢 Sheets Live';
     showToast('✅ Synced ' + clients.length + ' clients & ' + tickets.length + ' tickets');
@@ -617,10 +612,7 @@ function showAdmin() {
   if (!isAuthenticated) { showLogin(); return; }
   hideAll();
   document.getElementById('view-admin').classList.remove('hidden');
-  switchTab('clients');
-  renderClients(clients);
-  updateStats();
-  refreshFromSheets();
+  switchTab('clients'); renderClients(clients); updateStats(); refreshFromSheets();
 }
 function showAddClient() { if (!isAuthenticated) { showLogin(); return; } hideAll(); document.getElementById('view-add-client').classList.remove('hidden'); }
 function hideAll() { ['view-loading','view-login','view-landing','view-admin','view-add-client','view-client','view-client-history'].forEach(function(id) { document.getElementById(id).classList.add('hidden'); }); }
@@ -630,9 +622,7 @@ function showClientHistory(clientName, clientLocation) {
   document.getElementById('view-client-history').classList.remove('hidden');
   document.getElementById('history-client-name').textContent = clientName.toUpperCase();
   document.getElementById('history-client-location').textContent = '📍 ' + clientLocation;
-  var clientTickets = tickets.filter(function(t) {
-    return (t.clientName || '').toLowerCase().trim() === clientName.toLowerCase().trim();
-  });
+  var clientTickets = tickets.filter(function(t) { return (t.clientName || '').toLowerCase().trim() === clientName.toLowerCase().trim(); });
   var open = clientTickets.filter(function(t) { return t.status !== 'closed'; }).length;
   var resolved = clientTickets.filter(function(t) { return t.status === 'closed'; }).length;
   document.getElementById('history-total').textContent = clientTickets.length;
@@ -721,6 +711,7 @@ function renderClients(list) {
         '<button class="btn-view" onclick="showNFCModal_client(\'' + escHtml(client.slug) + '\',\'' + safeName + '\')">NFC Tag</button>' +
         '<button class="btn-view" onclick="showClientPortalById(' + client.id + ')">Preview</button>' +
         '<a href="/proposal?client=' + encodeURIComponent(client.name) + '" target="_blank" class="btn-view" style="text-decoration:none;">📄 Quote</a>' +
+        '<a href="/report?client=' + encodeURIComponent(client.name) + '" target="_blank" class="btn-view" style="text-decoration:none;">📋 Report</a>' +
         '<button class="btn-danger" onclick="deleteClient(' + client.id + ')">Delete</button>' +
       '</div></td>';
     tbody.appendChild(tr);
@@ -750,7 +741,7 @@ function renderTickets() {
     tr.innerHTML =
       '<td><div class="client-name-cell">' + escHtml(ticket.clientName || 'Unknown') + '</div></td>' +
       '<td>' + escHtml(ticket.issue) + '</td>' +
-      '<td><div class="ticket-details">' + (ticket.details ? escHtml(ticket.details) : '<em style="color:var(--muted);">No additional details</em>') + '</div></td>' +
+      '<td><div class="ticket-details">' + (ticket.details ? escHtml(ticket.details) : '<em style="color:var(--muted);">No details</em>') + '</div></td>' +
       '<td><div class="ticket-time">' + formatTime(ticket.timestamp) + '</div></td>' +
       '<td><span class="ticket-badge ticket-' + ticket.status + '">' + ticket.status.toUpperCase() + '</span></td>' +
       '<td>' + actionBtn + '</td>';
